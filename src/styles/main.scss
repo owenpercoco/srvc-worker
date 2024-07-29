@@ -34,7 +34,7 @@ body, html {
 .wrapper {
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  height: 88vh;
 }
 // Use variables in the .container class
 .container {
@@ -58,7 +58,7 @@ body, html {
     }
     .right-column {
       flex-direction: row;
-      margin: auto;
+      margin-top: $gap-size/2;
     }
   }
 }
@@ -68,7 +68,7 @@ body, html {
 .product-container {
   display: flex;
   flex-direction: column;
-  padding-bottom: $gap-size * 4;
+  padding-bottom: $gap-size * 2;
   .product-header {
     display: flex;
     justify-content: space-between;

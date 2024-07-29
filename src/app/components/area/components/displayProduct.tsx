@@ -21,7 +21,7 @@ export function DisplayProduct({ key, product, setProduct, setShowModal }: Flowe
   const hovering = useRef<boolean>(false)
 
   const showDescription = Boolean(product.description);
-  const showPrices = Boolean(product.prices);
+  const showPrices = Boolean(product.prices || product.price);
 
   const handleTouch = () => {
     console.log("in here")
