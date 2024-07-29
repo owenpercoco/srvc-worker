@@ -1,5 +1,5 @@
 import React from 'react';
-
+import TelegramLogo from './telegramLogo'
 interface TelegramLinkProps {
   url: string;
 }
@@ -8,7 +8,7 @@ const TelegramLink: React.FC<TelegramLinkProps> = ({ url }) => {
   return (
     <div className="telegram-container">
       <a href={url} target="_blank" rel="noopener noreferrer">
-        <img src="/telegram_logo.svg" alt="Telegram Logo" />
+        <TelegramLogo/>
       </a>
       <span className="telegram-text">
         Check Us Out On Telegram
