@@ -30,8 +30,6 @@ export function DisplayProduct({ key, product, setProduct, setShowModal }: Flowe
       if (hovering.current) {
           setProduct(product);
           setShowModal(true);
-          setHover(false);
-          hovering.current = false
       }
     }, 250);
   };

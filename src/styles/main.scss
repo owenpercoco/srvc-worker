@@ -101,6 +101,9 @@ body, html {
     padding-top: 10px;
     &.hover {
       background-color: darken($background-color, 8);
+      padding: 10px 4px 0px 4px;
+      border-radius: 8px;
+      color: lighten($black-color, 30)
     }
     .product-row {
       display: grid;

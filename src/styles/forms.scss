@@ -1,0 +1,21 @@
+.text-input-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .invisible-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .styled-span {
+    display: inline-block;
+    /* Add your custom styles here */
+    font-size: 16px;
+    color: #333;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  

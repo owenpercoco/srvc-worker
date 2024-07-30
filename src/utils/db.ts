@@ -5,8 +5,6 @@ dotenv.config({ path: '.env.local' }); // Load environment variables from .env f
 
 const MONGO_URI = process.env.MONGO_DB_URI!;
 
-console.log(" process env variables ", process.env)
-
 if (!MONGO_URI) {
   throw new Error('Please define the MONGO_URI environment variable inside .env file');
 }
