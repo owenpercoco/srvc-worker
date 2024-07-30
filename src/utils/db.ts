@@ -44,6 +44,6 @@ async function connect() {
     }
     cached.conn = await cached.promise;
     return cached.conn;
-    }
+}
 
 export default connect;
