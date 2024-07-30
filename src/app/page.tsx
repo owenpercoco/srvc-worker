@@ -51,7 +51,7 @@ export default function Home() {
             <hr/>
             <Area
               title='psychedelics'
-              product={data.psychedelic}
+              product={data.psychedelics}
               setProduct={setProduct} 
               setShowModal={setShowModal}
             />
