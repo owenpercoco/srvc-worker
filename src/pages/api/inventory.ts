@@ -45,7 +45,6 @@ function isConcentrateProduct(product: any) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  console.log("befor4 try block");
   try {
     console.log("Connecting to database...");
     await connect();
