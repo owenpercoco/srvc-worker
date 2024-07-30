@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import connect from '../../utils/db';
 import Product from '../../models/Product';
-import { returnData, SungrownProduct, PremiumProduct, EdiblesProduct, PsychedelicProduct, PrerollProduct, ConcentrateProduct, BaseProduct } from '../../data/inventory';
+import { returnData, SungrownProduct, PremiumProduct, EdiblesProduct, PsychedelicProduct, PrerollProduct, ConcentrateProduct, BaseProduct, categoryEnum } from '../../data/inventory';
 
 type Data = {
   success: boolean;
@@ -43,6 +43,34 @@ function isPrerollProduct(product: any): product is PrerollProduct {
 function isConcentrateProduct(product: any): product is ConcentrateProduct {
   return product.category === 'concentrate' && product.price !== undefined && product.amount !== undefined;
 }
+function processData(data: BaseProduct[]): returnData {
+  const result: returnData = {
+    sungrown: [],
+    premium: [],
+    concentrates: [],
+    edibles: [],
+    prerolls: [],
+    psychedelics: []
+  };
+
+  for (let product of data) {
+    if (isSungrownProduct(product)) {
+      result.sungrown.push(product);
+    } else if (isPremiumProduct(product)) {
+      result.premium.push(product);
+    } else if (isEdiblesProduct(product)) {
+      result.edibles.push(product);
+    } else if (isPsychedelicProduct(product)) {
+      result.psychedelics.push(product);
+    } else if (isPrerollProduct(product)) {
+      result.prerolls.push(product);
+    } else if (isConcentrateProduct(product)) {
+      result.concentrates.push(product);
+    }
+  }
+
+  return result;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
@@ -57,22 +85,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     console.log(`Fetched products in ${Date.now() - fetchStart}ms`, products);
 
     const filterStart = Date.now();
-    const sungrown = products.filter(isSungrownProduct);
-    const premium = products.filter(isPremiumProduct);
-    const edibles = products.filter(isEdiblesProduct);
-    const psychedelic = products.filter(isPsychedelicProduct);
-    const prerolls = products.filter(isPrerollProduct);
-    const concentrates = products.filter(isConcentrateProduct);
+
     console.log(`Filtered categories in ${Date.now() - filterStart}ms`);
 
-    const data: returnData = {
-      sungrown,
-      premium,
-      edibles,
-      psychedelic,
-      prerolls,
-      concentrates,
-    };
+    const data = processData(products);
 
     res.status(200).json({ success: true, data });
   } catch (error) {
