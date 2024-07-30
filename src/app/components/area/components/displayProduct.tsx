@@ -4,7 +4,7 @@ import { BaseProduct } from '@/data/inventory';
 interface FlowerProps {
   key: string;
   product: BaseProduct;
-  setProduct: Dispatch<SetStateAction<BaseProduct>>;
+  setProduct: Dispatch<SetStateAction<BaseProduct | undefined>>;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }
 

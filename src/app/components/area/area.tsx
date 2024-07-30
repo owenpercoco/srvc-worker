@@ -6,7 +6,7 @@ interface Props {
   title: string;
   premium?: boolean;
   product: BaseProduct[];
-  setProduct: Dispatch<SetStateAction<BaseProduct>>
+  setProduct: Dispatch<SetStateAction<BaseProduct | undefined>>
   setShowModal: Dispatch<SetStateAction<boolean>>
 }
 
