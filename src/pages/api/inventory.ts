@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import connect from '../../utils/db';
 import Product from '../../models/Product';
-import { returnData, BaseProduct, SungrownProduct, PremiumProduct, EdiblesProduct, PsychedelicProduct, PrerollProduct, ConcentrateProduct } from '../../data/inventory';
+import { returnData, SungrownProduct, PremiumProduct, EdiblesProduct, PsychedelicProduct, PrerollProduct, ConcentrateProduct, BaseProduct } from '../../data/inventory';
 
 type Data = {
   success: boolean;
@@ -15,63 +15,57 @@ function checkType(type: string | undefined) {
 }
 
 // Type guard to check if a product is a SungrownProduct
-function isSungrownProduct(product: any) {
+function isSungrownProduct(product: any): product is SungrownProduct {
   return product.category === 'sungrown' && checkType(product.type) && product.prices !== undefined;
 }
 
 // Type guard to check if a product is a PremiumProduct
-function isPremiumProduct(product: any) {
+function isPremiumProduct(product: any): product is PremiumProduct {
   return product.category === 'premium' && checkType(product.type) && product.prices !== undefined;
 }
 
 // Type guard to check if a product is an EdiblesProduct
-function isEdiblesProduct(product: any) {
+function isEdiblesProduct(product: any): product is EdiblesProduct {
   return product.category === 'edible' && product.price !== undefined;
 }
 
 // Type guard to check if a product is a PsychedelicProduct
-function isPsychedelicProduct(product: any) {
+function isPsychedelicProduct(product: any): product is PsychedelicProduct {
   return product.category === 'psychadelic' && product.price !== undefined && product.amount !== undefined;
 }
 
 // Type guard to check if a product is a PrerollProduct
-function isPrerollProduct(product: any) {
+function isPrerollProduct(product: any): product is PrerollProduct {
   return product.category === 'preroll' && product.type !== undefined && product.price !== undefined;
 }
 
 // Type guard to check if a product is a ConcentrateProduct
-function isConcentrateProduct(product: any) {
+function isConcentrateProduct(product: any): product is ConcentrateProduct {
   return product.category === 'concentrate' && product.price !== undefined && product.amount !== undefined;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    console.log("Connecting to database...");
+    console.log("API route called");
+
+    const start = Date.now();
     await connect();
-    console.log("Connected to database");
+    console.log(`Connected to database in ${Date.now() - start}ms`);
 
-    console.log("Fetching products from database...");
-    const products = await Product.find({ quantity: { $gt: 0 } }).lean();
-    console.log("Fetched products:", products);
+    const fetchStart = Date.now();
+    const products: BaseProduct[] = await Product.find({ quantity: { $gt: 0 } }).lean();
+    console.log(`Fetched products in ${Date.now() - fetchStart}ms`, products);
 
-    console.log("Filtering products into categories...");
+    const filterStart = Date.now();
     const sungrown = products.filter(isSungrownProduct);
     const premium = products.filter(isPremiumProduct);
     const edibles = products.filter(isEdiblesProduct);
     const psychedelic = products.filter(isPsychedelicProduct);
     const prerolls = products.filter(isPrerollProduct);
     const concentrates = products.filter(isConcentrateProduct);
+    console.log(`Filtered categories in ${Date.now() - filterStart}ms`);
 
-    console.log("Filtered categories:", {
-      sungrown,
-      premium,
-      edibles,
-      psychedelic,
-      prerolls,
-      concentrates,
-    });
-
-    const data = {
+    const data: returnData = {
       sungrown,
       premium,
       edibles,

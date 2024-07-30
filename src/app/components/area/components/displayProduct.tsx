@@ -24,7 +24,6 @@ export function DisplayProduct({ key, product, setProduct, setShowModal }: Flowe
   const showPrices = Boolean(product.prices || product.price);
 
   const handleTouch = () => {
-    console.log("in here")
     setHover(true);
     hovering.current = true
     setTimeout(() => {

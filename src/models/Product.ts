@@ -1,17 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-
-export interface BaseProduct {
-  name: string;
-  description?: string;
-  subtitle?: string;
-  type?: 'indica' | 'sativa' | 'hybrid';
-  price?: number;
-  prices?: number[];
-  amount?: string;
-  category: string;
-  quantity: number;
-}
+import { BaseProduct } from '@/data/inventory';
 
 interface IProduct extends BaseProduct, Document {
   id: string;
