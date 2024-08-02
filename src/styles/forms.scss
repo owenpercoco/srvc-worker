@@ -18,4 +18,67 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
+  .accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
   
+  .expand-arrow {
+    font-size: 1.5em;
+  }
+  
+  form {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-top: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+  
+      &.quantity-control {
+        flex-direction: row;
+        align-items: center;
+        
+        button {
+          width: 30px;
+          height: 30px;
+          font-size: 1.2em;
+        }
+        
+        span {
+          margin: 0 10px;
+        }
+      }
+    }
+  }
+  
+  .field-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px;
+    &.description {
+        .text-input-container {
+            .text-input {
+                width: 250px;
+            }
+        }
+    }
+  }
+
+  .quantity-control {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+  }
+

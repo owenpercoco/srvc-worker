@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema, SchemaTypes } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { BaseProduct } from '@/data/inventory';
 
@@ -35,10 +35,16 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
     enum: ['indica', 'sativa', 'hybrid'],
   },
   price: {
-    type: Number,
-  },
-  prices: {
-    type: [Number],
+    type: SchemaTypes.Mixed,
+    validate: {
+      validator: function(value: any) {
+        return (
+          typeof value === 'number' ||
+          (Array.isArray(value) && value.every((item) => typeof item === 'number'))
+        );
+      },
+      message: 'Price must be a number or an array of numbers',
+    },
   },
   amount: {
     type: String,

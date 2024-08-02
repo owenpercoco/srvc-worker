@@ -1,13 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
-import { BaseProduct  } from "@/data/inventory";
-import { TextInput } from "./components";
+import { BaseProduct } from "@/data/inventory";
+import ProductForm from "./components/ProductForm";
+
 interface DataBaseProduct extends BaseProduct {
+  _id: string;
   id: number;
 }
 
 export default function Inventory() {
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
+  const [newProduct, setNewProduct] = useState<BaseProduct>({
+    name: "",
+    description: "",
+    subtitle: "",
+    type: undefined,
+    price: undefined,
+    amount: "",
+    quantity: 1,
+    category: "sungrown",
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -20,58 +32,77 @@ export default function Inventory() {
     fetchProducts();
   }, []);
 
-  const handleAddProduct = () => {
-    setProducts([
-      ...products,
-      {
-        name: "",
-        description: "",
-        subtitle: "",
-        type: undefined,
-        price: undefined,
-        prices: [],
-        amount: "",
-        quantity: 1,
-        category: "sungrown",
-      },
-    ]);
-  };
-
   const handleInputChange = (index: number, field: string, value: any) => {
     const newProducts = [...products];
     newProducts[index] = { ...newProducts[index], [field]: value };
     setProducts(newProducts);
   };
 
+  const handleNewProductChange = (field: string, value: any) => {
+    setNewProduct({ ...newProduct, [field]: value });
+  };
+
   const handleSaveProduct = async (index: number) => {
     const product = products[index];
-    if (product.id) {
-      await fetch(`/api/products/${product.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
-    } else {
+    try {
+      if (product._id) {
+        await fetch(`/api/products/${product._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(product),
+        });
+      } else {
+        const response = await fetch("/api/products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(product),
+        });
+        const newProduct = await response.json();
+        const newProducts = [...products];
+        newProducts[index] = newProduct.data;
+        setProducts(newProducts);
+      }
+      return true; // Indicate success
+    } catch (error) {
+      console.error("Failed to save product:", error);
+      return false; // Indicate failure
+    }
+  };
+
+  const handleSaveNewProduct = async () => {
+    try {
       const response = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(product),
+        body: JSON.stringify(newProduct),
       });
-      const newProduct = await response.json();
-      const newProducts = [...products];
-      newProducts[index] = newProduct.data;
-      setProducts(newProducts);
+      const newProductData = await response.json();
+      setProducts([...products, newProductData.data]);
+      setNewProduct({
+        name: "",
+        description: "",
+        subtitle: "",
+        type: undefined,
+        price: undefined,
+        amount: "",
+        quantity: 1,
+        category: "sungrown",
+      });
+    } catch (error) {
+      console.error("Failed to add new product:", error);
     }
   };
 
   const handleDeleteProduct = async (index: number) => {
     const product = products[index];
-    if (product.id) {
-      await fetch(`/api/products/${product.id}`, {
+    if (product._id) {
+      await fetch(`/api/products/${product._id}`, {
         method: "DELETE",
       });
       const newProducts = products.filter((_, i) => i !== index);
@@ -83,38 +114,32 @@ export default function Inventory() {
 
   return (
     <div className="inventory-container">
-      <button onClick={handleAddProduct}>+ Add Product</button>
+      <h2>Add New Product</h2>
+      <ProductForm
+        product={newProduct}
+        onInputChange={handleNewProductChange}
+        onSave={handleSaveNewProduct}
+        onDelete={() => setNewProduct({
+          name: "",
+          description: "",
+          subtitle: "",
+          type: undefined,
+          price: undefined,
+          amount: "",
+          quantity: 1,
+          category: "sungrown",
+        })}
+      />
+      <h2>Inventory</h2>
       {products.map((product, index) => (
         <ProductForm
-          key={product.id || index}
+          key={product._id || index}
           product={product}
           onInputChange={(field, value) => handleInputChange(index, field, value)}
           onSave={() => handleSaveProduct(index)}
           onDelete={() => handleDeleteProduct(index)}
         />
       ))}
-    </div>
-  );
-}
-
-interface ProductFormProps {
-  product: BaseProduct;
-  onInputChange: (field: string, value: any) => void;
-  onSave: () => void;
-  onDelete: () => void;
-}
-
-function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormProps) {
-  return (
-    <div>
-      <form>
-          <TextInput
-            value={product.name}
-            setValue={(value) => onInputChange("name", value)}
-          />
-        <button type="button" onClick={onSave}>Save</button>
-        <button type="button" onClick={onDelete}>Delete</button>
-      </form>
     </div>
   );
 }

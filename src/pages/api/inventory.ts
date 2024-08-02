@@ -16,12 +16,12 @@ function checkType(type: string | undefined) {
 
 // Type guard to check if a product is a SungrownProduct
 function isSungrownProduct(product: any): product is SungrownProduct {
-  return product.category === 'sungrown' && checkType(product.type) && product.prices !== undefined;
+  return product.category === 'sungrown' && checkType(product.type);
 }
 
 // Type guard to check if a product is a PremiumProduct
 function isPremiumProduct(product: any): product is PremiumProduct {
-  return product.category === 'premium' && checkType(product.type) && product.prices !== undefined;
+  return product.category === 'premium' && checkType(product.type);
 }
 
 // Type guard to check if a product is an EdiblesProduct

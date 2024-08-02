@@ -22,7 +22,7 @@ const priceDisplay = (priceValue: number | number[]): string => {
 
 const Modal = ({show, product, setShowModal}: modalProps) => {
     if (!show || product === undefined) return <div></div>
-    let price = product.prices || product.price || []
+    let price = product.price || []
     return (
         <div id="myModal" className="modal">
             <div className="modal-content">

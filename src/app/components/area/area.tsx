@@ -12,7 +12,7 @@ interface Props {
 
 
 
-function ConcentratesArea({title, premium = false, product, setProduct, setShowModal }: Props) {
+function Area({title, premium = false, product, setProduct, setShowModal }: Props) {
     function headerFromTitle(title: string) {
         switch (title) {
             case 'sun grown': {
@@ -60,4 +60,4 @@ function ConcentratesArea({title, premium = false, product, setProduct, setShowM
   );
 }
 
-export default ConcentratesArea;
+export default Area;

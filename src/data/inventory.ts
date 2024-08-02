@@ -11,9 +11,8 @@ export interface BaseProduct {
     // strain typeing
     type?: 'indica' | 'sativa' | 'hybrid';
     // price of a single object
-    price?: number;
+    price?: number | number[];
     // objects with multiple sizes get this
-    prices?: number[];
     // front end value for the amount
     amount?: string; 
     // back end value for the amount we have
@@ -26,11 +25,15 @@ export interface BaseProduct {
 export interface FlowerProduct extends BaseProduct {
     type: 'indica' | 'sativa' | 'hybrid';
     // usually 3 or 4
-    prices: number[];
+    price: number[];
 }
 
-export interface SungrownProduct extends FlowerProduct {}
-export interface PremiumProduct extends FlowerProduct {}
+export interface SungrownProduct extends FlowerProduct {
+  price: number[]
+}
+export interface PremiumProduct extends FlowerProduct {
+  price: number[]
+}
 export interface EdiblesProduct extends BaseProduct {
     price: number;
 }
@@ -61,7 +64,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Sour Diesel",
     description: "Top effects: energetic and uplifted",
     type: "hybrid",
-    prices: [60, 200],
+    price: [60, 200],
     quantity: 1,
     category: categoryEnum.sungrown,
   },
@@ -69,7 +72,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Tyson",
     description: "Top effects: relaxed and hungry",
     type: "hybrid",
-    prices: [60, 200],
+    price: [60, 200],
     quantity: 1,
     category: categoryEnum.sungrown,
   },
@@ -77,7 +80,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Purple Cream",
     description: "Top effects: hungry and sleepy",
     type: "hybrid",
-    prices: [60, 200],
+    price: [60, 200],
     quantity: 1,
     category: categoryEnum.sungrown,
   },
@@ -85,7 +88,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Gary Payton",
     description: "Top effects: euphoric and giggly",
     type: "hybrid",
-    prices: [60, 200],
+    price: [60, 200],
     quantity: 1,
     category: categoryEnum.sungrown,
   },
@@ -93,7 +96,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Bobcat",
     description: "Top effects: happy and creative",
     type: "hybrid",
-    prices: [60, 200],
+    price: [60, 200],
     quantity: 1,
     category: categoryEnum.sungrown,
   },
@@ -101,7 +104,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Lemon Cherry Gelato",
     description: "Top effects: relaxed and giggly",
     type: "hybrid",
-    prices: [60, 200],
+    price: [60, 200],
     quantity: 1,
     category: categoryEnum.sungrown,
   },
@@ -112,7 +115,7 @@ const premiumProducts: PremiumProduct[] = [
     name: "Haze",
     description: "Top effects: uplifted and creative",
     type: "sativa",
-    prices: [45, 85, 160, 320],
+    price: [45, 85, 160, 320],
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -120,7 +123,7 @@ const premiumProducts: PremiumProduct[] = [
     name: "Guava Runts",
     description: "Top effects: giggly and aroused",
     type: "hybrid",
-    prices: [45, 85, 160, 320],
+    price: [45, 85, 160, 320],
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -128,7 +131,7 @@ const premiumProducts: PremiumProduct[] = [
     name: "Gelotti",
     description: "Top effects: talkative and focused",
     type: "hybrid",
-    prices: [45, 85, 160, 320],
+    price: [45, 85, 160, 320],
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -136,7 +139,7 @@ const premiumProducts: PremiumProduct[] = [
     name: "WH Bubble Gum",
     description: "Top effects: happy and giggly",
     type: "hybrid",
-    prices: [50, 90, 170, 330],
+    price: [50, 90, 170, 330],
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -145,7 +148,7 @@ const premiumProducts: PremiumProduct[] = [
     subtitle: "candy",
     description: "Top effects: aroused and uplifted",
     type: "hybrid",
-    prices: [50, 90, 170, 330],
+    price: [50, 90, 170, 330],
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -154,7 +157,7 @@ const premiumProducts: PremiumProduct[] = [
     subtitle: "candy",
     description: "Top effects: relaxed and sleepy",
     type: "hybrid",
-    prices: [55, 100, 190, 330],
+    price: [55, 100, 190, 330],
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -162,7 +165,7 @@ const premiumProducts: PremiumProduct[] = [
     name: "Bazookalato",
     subtitle: "candy",
     type: "hybrid",
-    prices: [55, 100, 190],
+    price: [55, 100, 190],
     quantity: 1,
     category: categoryEnum.premium,
   },

@@ -3,9 +3,10 @@ import React, { ChangeEvent } from 'react';
 interface TextInputProps {
   value: string;
   setValue: (value: string) => void;
+  placeholder: string;
 }
 
-export function TextInput({ value, setValue }: TextInputProps) {
+export function TextInput({ value, setValue, placeholder }: TextInputProps) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const lowerCaseValue = e.target.value.toLowerCase();
     setValue(lowerCaseValue);
@@ -17,9 +18,9 @@ export function TextInput({ value, setValue }: TextInputProps) {
         type="text" 
         value={value} 
         onChange={handleChange} 
-        className="invisible-input" 
+        className="text-input" 
+        placeholder={placeholder}
       />
-      <span className="styled-span">{value}</span>
     </div>
   );
 }
