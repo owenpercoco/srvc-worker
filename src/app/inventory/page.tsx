@@ -129,7 +129,7 @@ export default function Inventory() {
           price: undefined,
           amount: "",
           quantity: 1,
-          category: "sungrown",
+          category: categoryEnum.sungrown,
         })}
       />
       <h2>Inventory</h2>
