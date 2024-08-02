@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { BaseProduct } from "@/data/inventory";
-import ProductForm from "./components/ProductForm";
+import ProductForm from "./components/productForm";
 
 interface DataBaseProduct extends BaseProduct {
   _id: string;
@@ -94,8 +94,10 @@ export default function Inventory() {
         quantity: 1,
         category: "sungrown",
       });
+      return true
     } catch (error) {
       console.error("Failed to add new product:", error);
+      return false
     }
   };
 
