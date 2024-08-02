@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BaseProduct } from '@/data/inventory';
-import TextInput from './TextInput';
+import TextInput from './textInput';
 
 interface ProductFormProps {
   product: BaseProduct;

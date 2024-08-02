@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { BaseProduct } from "@/data/inventory";
+import { BaseProduct, categoryEnum } from "@/data/inventory";
 import ProductForm from "./components/productForm";
 
 interface DataBaseProduct extends BaseProduct {
@@ -18,7 +18,7 @@ export default function Inventory() {
     price: undefined,
     amount: "",
     quantity: 1,
-    category: "sungrown",
+    category: categoryEnum.sungrown,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -92,7 +92,7 @@ export default function Inventory() {
         price: undefined,
         amount: "",
         quantity: 1,
-        category: "sungrown",
+        category: categoryEnum.sungrown,
       });
       return true
     } catch (error) {
