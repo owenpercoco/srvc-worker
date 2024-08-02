@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import connect from '@/utils/db';
 import User from '@/models/User';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,

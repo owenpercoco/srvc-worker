@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { BaseProduct, categoryEnum } from "@/data/inventory";
-import { ProductForm, TextInput} from "./components/";
+import { ProductForm, TextInput } from "./components/";
 import { Logo, Modal} from "../components";
 
 interface DataBaseProduct extends BaseProduct {
