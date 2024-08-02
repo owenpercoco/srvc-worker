@@ -9,6 +9,20 @@ export default function Home() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [product, setProduct] = useState<BaseProduct | undefined>()
 
+  const priceDisplay = (priceValue: number | number[] | undefined): string => {
+    if (priceValue === undefined) return '' 
+    let displayString = ''
+    let displayAmounts = ['⅛', '¼', '½', 'oz']
+
+    if (typeof priceValue === "number") {
+        displayString = `$${priceValue}`
+    } else if (Array.isArray(priceValue)) {
+        if (priceValue.length === 2) displayAmounts = ['¼', 'oz']
+        displayString = priceValue.map((val, index) => `$${val} ${displayAmounts[index]}`).join(" • ");
+    }
+    return displayString;
+}
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/api/inventory');
@@ -22,7 +36,7 @@ export default function Home() {
   if (!data) {
     return (
       <div className="loading-container">
-                <Logo />
+          <Logo />
       </div> 
     )
   }
@@ -93,7 +107,26 @@ export default function Home() {
       <SrvcFooter />
     </div>
 
-    <Modal show={showModal} setShowModal={setShowModal} product={product}/>
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        {product !== undefined && (
+        <div>
+          <div className='modal-row'>
+                <div className="modal-header">
+                    <h2>{product?.name}</h2>
+                    <hr/>
+                </div>
+            </div>
+            <div className='modal-row detail-row'>
+                {product.type && <span className="modal-text">{product?.type}</span>}
+                <span className="modal-prices">{priceDisplay(product.price)}</span>
+                <span className='modal-amount'>{product?.amount}</span>
+            </div>
+            <div className='modal-row'>
+                <span className="modal-text">{product.description}</span>
+            </div>
+          </div>
+          )}
+    </Modal>
   </div>
 );
 };

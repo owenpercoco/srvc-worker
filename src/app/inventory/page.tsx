@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { BaseProduct, categoryEnum } from "@/data/inventory";
-import ProductForm from "./components/productForm";
+import { ProductForm, TextInput} from "./components/";
+import { Logo, Modal} from "../components";
 
 interface DataBaseProduct extends BaseProduct {
   _id: string;
@@ -9,6 +10,8 @@ interface DataBaseProduct extends BaseProduct {
 }
 
 export default function Inventory() {
+  const [permissed, setPermissed] = useState(false);
+  const [passKey, setPassKey] = useState('');
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
   const [newProduct, setNewProduct] = useState<BaseProduct>({
     name: "",
@@ -21,6 +24,7 @@ export default function Inventory() {
     category: categoryEnum.sungrown,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -32,6 +36,19 @@ export default function Inventory() {
     fetchProducts();
   }, []);
 
+  const handlePassKey = async () => {
+    await fetch(`/api/passKey`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ passKey }),
+    }).then(data => {
+      if (data.status === 200) {
+        setPermissed(true)
+      }
+    });
+  }
   const handleInputChange = (index: number, field: string, value: any) => {
     const newProducts = [...products];
     newProducts[index] = { ...newProducts[index], [field]: value };
@@ -94,10 +111,11 @@ export default function Inventory() {
         quantity: 1,
         category: categoryEnum.sungrown,
       });
-      return true
+      setIsModalOpen(false);
+      return true;
     } catch (error) {
       console.error("Failed to add new product:", error);
-      return false
+      return false;
     }
   };
 
@@ -113,25 +131,20 @@ export default function Inventory() {
   };
 
   if (isLoading) return <div>Loading...</div>;
-
+  if (!permissed) return (
+    <div className="logo-container pass-key-container">
+      <Logo/>
+      this area is protected
+      <TextInput
+        value={passKey}
+        setValue={setPassKey}
+        placeholder="password"
+        />
+      <button type="submit" onClick={handlePassKey}>enter</button>
+    </div>
+  )
   return (
     <div className="inventory-container">
-      <h2>Add New Product</h2>
-      <ProductForm
-        product={newProduct}
-        onInputChange={handleNewProductChange}
-        onSave={handleSaveNewProduct}
-        onDelete={() => setNewProduct({
-          name: "",
-          description: "",
-          subtitle: "",
-          type: undefined,
-          price: undefined,
-          amount: "",
-          quantity: 1,
-          category: categoryEnum.sungrown,
-        })}
-      />
       <h2>Inventory</h2>
       {products.map((product, index) => (
         <ProductForm
@@ -142,6 +155,32 @@ export default function Inventory() {
           onDelete={() => handleDeleteProduct(index)}
         />
       ))}
+
+      <button
+        className="add-product-button"
+        onClick={() => setIsModalOpen(true)}
+      >
+        +
+      </button>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2>Add New Product</h2>
+        <ProductForm
+          product={newProduct}
+          onInputChange={handleNewProductChange}
+          onSave={handleSaveNewProduct}
+          onDelete={() => setNewProduct({
+            name: "",
+            description: "",
+            subtitle: "",
+            type: undefined,
+            price: undefined,
+            amount: "",
+            quantity: 1,
+            category: categoryEnum.sungrown,
+          })}
+        />
+      </Modal>
     </div>
   );
 }

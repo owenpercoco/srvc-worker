@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { BaseProduct } from '@/data/inventory';
-import TextInput from './textInput';
+import { BaseProduct, categoryEnum } from '@/data/inventory';
+import TextInput from './TextInput';
+import { Select } from '@mui/material';
 
 interface ProductFormProps {
   product: BaseProduct;
@@ -14,8 +15,12 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
   const { register, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       name: product.name,
+      subtitle: product.subtitle || '',
       description: product.description || '',
       price: product.price !== undefined ? product.price.toString() : '',
+      amount: product.amount || '',
+      category: product.category,
+      type: product.type || '',
       quantity: product.quantity,
     },
   });
@@ -71,6 +76,17 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
               placeholder="Name"
             />
           </div>
+          <div className="field-container">
+            <label>Subtitle</label>
+            <TextInput
+              value={watch('subtitle')}
+              setValue={(value) => {
+                setValue('subtitle', value);
+                onInputChange('subtitle', value);
+              }}
+              placeholder="Subtitle"
+            />
+          </div>
           <div className="field-container description">
             <label>Description</label>
             <TextInput
@@ -89,6 +105,49 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
               setValue={handlePriceChange}
               placeholder=""
             />
+          </div>
+          <div className="field-container">
+            <label>Amount</label>
+            <TextInput
+              value={watch('amount')}
+              setValue={(value) => {
+                setValue('amount', value);
+                onInputChange('amount', value);
+              }}
+              placeholder="Amount"
+            />
+          </div>
+          <div className="field-container">
+            <label>Category</label>
+            <Select
+              value={watch('category')}
+              onChange={(e) => {
+                setValue('category', e.target.value as categoryEnum);
+                onInputChange('category', e.target.value);
+              }}
+            >
+              <option value="sungrown">Sungrown</option>
+              <option value="premium">Premium</option>
+              <option value="edible">Edible</option>
+              <option value="preroll">Preroll</option>
+              <option value="concentrate">Concentrate</option>
+              <option value="psychadelic">Psychadelic</option>
+            </Select>
+          </div>
+          <div className="field-container">
+            <label>Type</label>
+            <Select
+              value={watch('type')}
+              onChange={(e) => {
+                setValue('type', e.target.value);
+                onInputChange('type', e.target.value);
+              }}
+            >
+              <option value="">Select Type</option>
+              <option value="indica">Indica</option>
+              <option value="sativa">Sativa</option>
+              <option value="hybrid">Hybrid</option>
+            </Select>
           </div>
           <div className='field-container'>
             <div className="quantity-control">

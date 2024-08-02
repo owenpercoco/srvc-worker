@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
 
 export const authConfig = {
   pages: {
-    signIn: '/inventory',
   },
   callbacks: {
     async redirect({ url, baseUrl }: { url: string, baseUrl: string }): Promise<string> {
