@@ -20,7 +20,11 @@ export default function Home() {
     fetchData();
   }, []);
   if (!data) {
-    return <Logo />;
+    return (
+      <div className="loading-container">
+                <Logo />
+      </div> 
+    )
   }
 
   return (
