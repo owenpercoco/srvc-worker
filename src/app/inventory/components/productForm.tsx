@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BaseProduct, categoryEnum } from '@/data/inventory';
-import { TextField, Select, MenuItem } from '@mui/material';
+import { TextField, Select, MenuItem, Button } from '@mui/material';
 
 interface ProductFormProps {
   product: BaseProduct;
@@ -11,8 +11,8 @@ interface ProductFormProps {
   expanded?: boolean;
 }
 
-function ProductForm({ product, onInputChange, onSave, onDelete, expanded = false}: ProductFormProps) {
-  const { register, handleSubmit, watch, setValue } = useForm({
+function ProductForm({ product, onInputChange, onSave, onDelete, expanded = false }: ProductFormProps) {
+  const { handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       name: product.name,
       subtitle: product.subtitle || '',
@@ -51,6 +51,24 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
     }
   };
 
+  const handleCategoryChange = (value: categoryEnum) => {
+    setValue('category', value);
+    onInputChange('category', value);
+    if (value === 'sungrown') {
+      setValue('price', '60,200');
+      onInputChange('price', undefined);
+      onInputChange('prices', [60, 200]);
+    } else if (value === 'premium') {
+      setValue('price', '50,80,160,300');
+      onInputChange('price', undefined);
+      onInputChange('prices', [50, 80, 160, 300]);
+    } else {
+      setValue('price', '');
+      onInputChange('price', undefined);
+      onInputChange('prices', undefined);
+    }
+  };
+
   const onSubmit = async (data: any) => {
     const success = await onSave(data);
     setIsSaved(success);
@@ -77,18 +95,6 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
               fullWidth
             />
           </div>
-          <div className="field-container">
-            <label>Subtitle</label>
-            <TextField
-              value={watch('subtitle')}
-              onChange={(e) => {
-                setValue('subtitle', e.target.value);
-                onInputChange('subtitle', e.target.value);
-              }}
-              placeholder="Subtitle"
-              fullWidth
-            />
-          </div>
           <div className="field-container description">
             <label>Description</label>
             <TextField
@@ -104,23 +110,14 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             />
           </div>
           <div className="field-container">
-            <label>Price</label>
+            <label>Image</label>
             <TextField
-              value={watch('price')}
-              onChange={(e) => handlePriceChange(e.target.value)}
-              placeholder="Price"
-              fullWidth
-            />
-          </div>
-          <div className="field-container">
-            <label>Amount</label>
-            <TextField
-              value={watch('amount')}
-              onChange={(e) => {
-                setValue('amount', e.target.value);
-                onInputChange('amount', e.target.value);
+              type="file"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                if (e.target.files && e.target.files[0]) {
+                  onInputChange('image', e.target.files[0]);
+                }
               }}
-              placeholder="Amount"
               fullWidth
             />
           </div>
@@ -128,10 +125,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             <label>Category</label>
             <Select
               value={watch('category')}
-              onChange={(e) => {
-                setValue('category', e.target.value as categoryEnum);
-                onInputChange('category', e.target.value);
-              }}
+              onChange={(e) => handleCategoryChange(e.target.value as categoryEnum)}
               fullWidth
             >
               <MenuItem value="sungrown">Sungrown</MenuItem>
@@ -142,30 +136,55 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
               <MenuItem value="psychadelic">Psychadelic</MenuItem>
             </Select>
           </div>
+          {(watch('category') === 'sungrown' || watch('category') === 'premium' || watch('category') === 'preroll') && (
+            <div className="field-container">
+              <label>Type</label>
+              <Select
+                value={watch('type')}
+                onChange={(e) => {
+                  setValue('type', e.target.value);
+                  onInputChange('type', e.target.value);
+                }}
+                fullWidth
+              >
+                <MenuItem value="">Select Type</MenuItem>
+                <MenuItem value="indica">Indica</MenuItem>
+                <MenuItem value="sativa">Sativa</MenuItem>
+                <MenuItem value="hybrid">Hybrid</MenuItem>
+              </Select>
+            </div>
+          )}
+            <div className="field-container">
+              <label>Price</label>
+              <TextField
+                value={watch('price')}
+                onChange={(e) => handlePriceChange(e.target.value)}
+                placeholder="Price"
+                fullWidth
+              />
+            </div>
+          {(watch('category') === 'concentrate' || watch('category') === 'edible' || watch('category') === 'psychadelic') && (
+            <div className="field-container">
+              <label>Amount</label>
+              <TextField
+                value={watch('amount')}
+                onChange={(e) => {
+                  setValue('amount', e.target.value);
+                  onInputChange('amount', e.target.value);
+                }}
+                placeholder="Amount"
+                fullWidth
+              />
+            </div>
+          )}
           <div className="field-container">
-            <label>Type</label>
-            <Select
-              value={watch('type')}
-              onChange={(e) => {
-                setValue('type', e.target.value);
-                onInputChange('type', e.target.value);
-              }}
-              fullWidth
-            >
-              <MenuItem value="">Select Type</MenuItem>
-              <MenuItem value="indica">Indica</MenuItem>
-              <MenuItem value="sativa">Sativa</MenuItem>
-              <MenuItem value="hybrid">Hybrid</MenuItem>
-            </Select>
-          </div>
-          <div className='field-container'>
             <div className="quantity-control">
-                <button type="button" onClick={() => handleQuantityChange(-1)}>-</button>
-                <span>{watch('quantity')}</span>
-                <button type="button" onClick={() => handleQuantityChange(1)}>+</button>
+              <Button type="button" onClick={() => handleQuantityChange(-1)}>-</Button>
+              <span>{watch('quantity')}</span>
+              <Button type="button" onClick={() => handleQuantityChange(1)}>+</Button>
             </div>
           </div>
-          <button type="submit">Save</button>
+          <Button type="submit">Save</Button>
           {isSaved !== null && (
             <span
               style={{
@@ -178,7 +197,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
               }}
             ></span>
           )}
-          <button type="button" onClick={onDelete}>Delete</button>
+          <Button type="button" onClick={onDelete}>Delete</Button>
         </form>
       )}
     </div>
