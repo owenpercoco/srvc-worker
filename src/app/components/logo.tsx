@@ -1,7 +1,7 @@
 const Logo = () => {
   return (
     <div className="logo-container">
-      <div className="logo">
+      <div className="logo pulse">
         &quot;SRVC&quot;
       </div>
     </div>

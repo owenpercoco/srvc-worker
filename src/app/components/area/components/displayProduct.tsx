@@ -1,11 +1,19 @@
 import React, { useState, Dispatch, SetStateAction, useRef } from 'react';
 import { BaseProduct } from '@/data/inventory';
+import { TypeEnum } from '@/data/inventory';
 
 interface FlowerProps {
-  key: string;
   product: BaseProduct;
   setProduct: Dispatch<SetStateAction<BaseProduct | undefined>>;
   setShowModal: Dispatch<SetStateAction<boolean>>;
+}
+
+const frontEndTypeMap = {
+  'sativa': 'SAT',
+  'indica': 'IND',
+  'hybrid': 'HYB',
+  'indicadominant': 'IH',
+  'sativadominant': 'SH'
 }
 
 function priceArea(price: number | number[]): string {
@@ -15,7 +23,7 @@ function priceArea(price: number | number[]): string {
   return `$${price}`;
 }
 
-export function DisplayProduct({ key, product, setProduct, setShowModal }: FlowerProps) {
+export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProps) {
   const [hover, setHover] = useState(false);
   const hovering = useRef<boolean>(false);
 
@@ -28,32 +36,38 @@ export function DisplayProduct({ key, product, setProduct, setShowModal }: Flowe
       if (hovering.current) {
         setProduct(product);
         setShowModal(true);
+      } else {
+        setProduct(undefined);
+        setShowModal(false);
+        setHover(false);
       }
-    }, 250);
-  };
-
-  const handleEnd = () => {
-    hovering.current = false;
-    setHover(false);
-    setShowModal(false);
+    }, 500);
   };
 
   return (
     <div
-      key={key}
+      key={product.name}
       className={`product ${hover ? 'hover' : ''}`}
       onTouchStart={handleTouch}
-      onTouchEnd={handleEnd}
-      onMouseEnter={handleEnd}
-      onMouseLeave={handleEnd}
+      onTouchEnd={() => {hovering.current = false;}}
+      onClick={() => {setShowModal(true); setProduct(product)}}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
     >
+      <div className="hover-bg"></div>
       <div className="product-row">
         <span className="product-name">{product.name}</span>
-          <span className="product-price">
-            {priceArea(product.price || [])}
-          </span>
-        <span className="product-type">{product.type}</span>
+        <span className="product-price">
+          {priceArea(product.price || [])}
+        </span>
+        {product.amount !== undefined && (
+          <span className="product-type">{product.amount}</span>
+        )}
+        {product.type !== undefined && (
+          <span className="product-type">{frontEndTypeMap[product.type]}</span>
+        )}
       </div>
+
       {showDescription && (
         <div className="product-row">
           <span className="product-description">{product.description}</span>

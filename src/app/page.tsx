@@ -28,7 +28,7 @@ export default function Home() {
       const response = await fetch('/api/inventory');
       const result = await response.json()
       setData(result.data);
-      console.log(data)
+      console.log("data retrieved and set");
     };
 
     fetchData();
@@ -44,11 +44,15 @@ export default function Home() {
   return (
     <div className="wrapper">
       <div className="container">
+        <div className='info-container'>
+          <span className="info-text">hold any menu item for more information</span>
+        </div>
+        
       <div className="column-container">
         <div className="left-column">
             <Logo />
             {/* Render Sungrown Products */}
-            <hr/>
+            <hr className='expand'/>
             <Area
               title='sun grown'
               product={data.sungrown}
@@ -74,7 +78,7 @@ export default function Home() {
               setShowModal={setShowModal}
             />
         </div>
-        <div className='middle-seperator'></div>
+        <div className='middle-seperator grow-down'></div>
         <div className="right-column">
             {/* Render Premium Products */}
             <Area
@@ -109,18 +113,18 @@ export default function Home() {
 
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         {product !== undefined && (
-        <div>
+        <div className='modal-wrapper'>
           <div className='modal-row'>
                 <div className="modal-header">
                     <h2>{product?.name}</h2>
+                    {product.type && <span className="modal-text">{product?.type}</span>}
                     <hr/>
                 </div>
             </div>
             <div className='modal-row detail-row'>
-                {product.type && <span className="modal-text">{product?.type}</span>}
                 <span className="modal-prices">{priceDisplay(product.price)}</span>
-                <span className='modal-amount'>{product?.amount}</span>
             </div>
+            <span className='modal-amount'>{product?.amount}</span>
             <div className='modal-row'>
                 <span className="modal-text">{product.description}</span>
             </div>

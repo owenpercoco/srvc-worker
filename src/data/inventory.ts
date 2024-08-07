@@ -1,4 +1,5 @@
 export enum categoryEnum { sungrown = 'sungrown', premium = 'premium', edible = 'edible', preroll = 'preroll', concentrate = 'concentrate', psychadelic = 'psychadelic'}
+export enum TypeEnum { indica = 'indica', sativa='sativa', hybrid='hybrid', indicadominant='indicadominant', sativadominant='sativadominant'}
 export interface BaseProduct {
     // id database fields
     // uuid database fields

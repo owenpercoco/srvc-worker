@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BaseProduct, categoryEnum } from '@/data/inventory';
-import { TextInput }  from '../components';
-import { Select } from '@mui/material';
+import { TextField, Select, MenuItem } from '@mui/material';
 
 interface ProductFormProps {
   product: BaseProduct;
   onInputChange: (field: string, value: any) => void;
   onSave: (data: any) => Promise<boolean>;
-  onDelete: () => void;
+  onDelete?: () => void;
+  expanded?: boolean;
 }
 
-function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormProps) {
+function ProductForm({ product, onInputChange, onSave, onDelete, expanded = false}: ProductFormProps) {
   const { register, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       name: product.name,
@@ -25,8 +25,8 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
     },
   });
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isSaved, setIsSaved] = useState<null | boolean>(null); // null indicates no save attempt
+  const [isExpanded, setIsExpanded] = useState(expanded);
+  const [isSaved, setIsSaved] = useState<null | boolean>(null);
 
   const toggleAccordion = () => {
     setIsExpanded(!isExpanded);
@@ -54,7 +54,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
   const onSubmit = async (data: any) => {
     const success = await onSave(data);
     setIsSaved(success);
-    setTimeout(() => setIsSaved(null), 2000); // Reset after 2 seconds
+    setTimeout(() => setIsSaved(null), 2000);
   };
 
   return (
@@ -67,54 +67,61 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="field-container">
             <label>Name</label>
-            <TextInput
+            <TextField
               value={watch('name')}
-              setValue={(value) => {
-                setValue('name', value);
-                onInputChange('name', value);
+              onChange={(e) => {
+                setValue('name', e.target.value);
+                onInputChange('name', e.target.value);
               }}
               placeholder="Name"
+              fullWidth
             />
           </div>
           <div className="field-container">
             <label>Subtitle</label>
-            <TextInput
+            <TextField
               value={watch('subtitle')}
-              setValue={(value) => {
-                setValue('subtitle', value);
-                onInputChange('subtitle', value);
+              onChange={(e) => {
+                setValue('subtitle', e.target.value);
+                onInputChange('subtitle', e.target.value);
               }}
               placeholder="Subtitle"
+              fullWidth
             />
           </div>
           <div className="field-container description">
             <label>Description</label>
-            <TextInput
-                value={watch('description')}
-                setValue={(value) => {
-                setValue('description', value);
-                onInputChange('description', value);
-                }}
-                placeholder="Description"
+            <TextField
+              value={watch('description')}
+              onChange={(e) => {
+                setValue('description', e.target.value);
+                onInputChange('description', e.target.value);
+              }}
+              placeholder="Description"
+              fullWidth
+              multiline
+              rows={4}
             />
           </div>
           <div className="field-container">
             <label>Price</label>
-            <TextInput
+            <TextField
               value={watch('price')}
-              setValue={handlePriceChange}
-              placeholder=""
+              onChange={(e) => handlePriceChange(e.target.value)}
+              placeholder="Price"
+              fullWidth
             />
           </div>
           <div className="field-container">
             <label>Amount</label>
-            <TextInput
+            <TextField
               value={watch('amount')}
-              setValue={(value) => {
-                setValue('amount', value);
-                onInputChange('amount', value);
+              onChange={(e) => {
+                setValue('amount', e.target.value);
+                onInputChange('amount', e.target.value);
               }}
               placeholder="Amount"
+              fullWidth
             />
           </div>
           <div className="field-container">
@@ -125,13 +132,14 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
                 setValue('category', e.target.value as categoryEnum);
                 onInputChange('category', e.target.value);
               }}
+              fullWidth
             >
-              <option value="sungrown">Sungrown</option>
-              <option value="premium">Premium</option>
-              <option value="edible">Edible</option>
-              <option value="preroll">Preroll</option>
-              <option value="concentrate">Concentrate</option>
-              <option value="psychadelic">Psychadelic</option>
+              <MenuItem value="sungrown">Sungrown</MenuItem>
+              <MenuItem value="premium">Premium</MenuItem>
+              <MenuItem value="edible">Edible</MenuItem>
+              <MenuItem value="preroll">Preroll</MenuItem>
+              <MenuItem value="concentrate">Concentrate</MenuItem>
+              <MenuItem value="psychadelic">Psychadelic</MenuItem>
             </Select>
           </div>
           <div className="field-container">
@@ -142,11 +150,12 @@ function ProductForm({ product, onInputChange, onSave, onDelete }: ProductFormPr
                 setValue('type', e.target.value);
                 onInputChange('type', e.target.value);
               }}
+              fullWidth
             >
-              <option value="">Select Type</option>
-              <option value="indica">Indica</option>
-              <option value="sativa">Sativa</option>
-              <option value="hybrid">Hybrid</option>
+              <MenuItem value="">Select Type</MenuItem>
+              <MenuItem value="indica">Indica</MenuItem>
+              <MenuItem value="sativa">Sativa</MenuItem>
+              <MenuItem value="hybrid">Hybrid</MenuItem>
             </Select>
           </div>
           <div className='field-container'>

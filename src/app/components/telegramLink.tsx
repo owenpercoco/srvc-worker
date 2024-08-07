@@ -4,19 +4,26 @@ interface TelegramLinkProps {
   url: string;
 }
 
-const TelegramLink: React.FC<TelegramLinkProps> = ({ url }) => {
+const TelegramLink = ({ url }: TelegramLinkProps) => {
   return (
+    <a href={url} className="telegram-link" target="_blank" rel="noopener noreferrer">
     <div className="telegram-container">
-      <a href={url} target="_blank" rel="noopener noreferrer">
-        <TelegramLogo/>
-      </a>
       <span className="telegram-text">
-        Check Us Out On Telegram
+        Order now on Telegram
       </span>
+      <span className="telegram-text">
+        A secure messaging app
+      </span>
+        <TelegramLogo/>
+
       <span className='telegram-text'>
         Daily Menu Updates and Sales
       </span>
+      <span className='telegram-text'>
+       Click Here to Order Now
+      </span>
     </div>
+    </a>
   );
 };
 

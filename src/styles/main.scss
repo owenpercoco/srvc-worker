@@ -34,7 +34,6 @@ body, html {
 .wrapper {
   display: flex;
   justify-content: center;
-  height: 88vh;
 }
 // Use variables in the .container class
 .container {
@@ -48,9 +47,11 @@ body, html {
     flex-direction: row;
     gap: $gap-size;
     padding: $gap-size;
+    margin-bottom: 40px;
     .middle-seperator {
       background-color: $black-color;
       width: 2px;
+      margin: 3px;
     }
     .left-column {
       flex-direction: row;
@@ -76,6 +77,7 @@ body, html {
     font-weight: 900;
     text-transform: uppercase;
     padding: 0 $gap-size/4;
+    margin-bottom: $gap-size/2;
     span {
       font-size: $font-size;
       font-weight: 900;
@@ -101,22 +103,28 @@ body, html {
     padding: 10px 4px 0px 4px;
     &.hover {
       background-color: darken($background-color, 8);
+      transition: background-color 0.5s ease-in-out;
       padding: 10px 4px 0px 4px;
       border-radius: 8px;
       color: lighten($black-color, 30)
     }
     .product-row {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
+      display: flex;
+      flex: 1 1 auto;
       gap: $gap-size/2;
       justify-content: space-between;
       padding-bottom: $gap-size/2;
-      pointer-events: none;
+
       .product-name, .product-price, .product-type, .product-amount {
         font-size: $font-size;
         text-transform: uppercase;
         font-weight: 600;
+        flex-shrink: 0;
               }
+      .product-name {
+        margin-right: auto;
+        flex-shrink: 1;
+      }
       .product-description {
         font-size: $font-size * .75;
         font-weight: 500;
@@ -124,6 +132,30 @@ body, html {
       }
     }
   }
+}
+.product {
+  position: relative;
+  overflow: hidden;
+}
+
+.product .hover-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: rgba(0, 0, 0, 0.1); /* Change to your desired background color */
+  transition: width 0.5s ease-in-out;
+  z-index: 0;
+}
+
+.product.hover .hover-bg {
+  width: 100%;
+}
+
+.product .product-row {
+  position: relative;
+  z-index: 1;
 }
 .logo-container {
   display: flex;
@@ -163,6 +195,8 @@ body, html {
   z-index: 1000; // Ensure it's above other elements
   background-color: $background-color; // Optional: background color for better visibility
   justify-content: center;
+  position: fixed;
+  bottom: 0;
   .footer {
     display: flex;
     flex-direction: row;
@@ -199,7 +233,10 @@ body, html {
   background-color: rgb(0,0,0); 
   background-color: rgba(0,0,0,0.4); 
   padding-top: 60px;
-
+  .modal-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
   .modal-content {
     background-color: $background-color;
     margin: 5% auto; /* 15% from the top and centered */
@@ -211,34 +248,31 @@ body, html {
     display: flex;
     flex-direction: column;
   }
-  .modal-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    h2 {
-      margin-bottom: 2px;
-    }
-  }
   .modal-prices {
     margin-bottom: 16px;
   }
   .modal-row {
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
     &.price-row {
       justify-content: space-between;
     }
     &.detail-row {
-      display: flex;
-      flex-direction: row;
+      justify-content: space-between;
       gap: $gap-size*2
     }
   }
 
 }
 
-
+.info-container {
+  width: 100%;
+  text-align: center;
+  font-size: 8px;
+  text-transform: lowercase;
+  font-size: $font-size*1.25;
+  font-weight: 500;
+  margin: 4px;
+}
 
 /* The Close Button */
 .close {
@@ -255,18 +289,27 @@ body, html {
   cursor: pointer;
 }
 
-.telegram-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .telegram-text {
-    font-size: $font-size;
-  } 
-  svg {
-    height: 80px;
-    width: 80px;
-    padding-bottom: 16px;
+
+.telegram-link {
+  font-size: $font-size;
+  color: $black-color;
+  text-decoration: none;
+  .telegram-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .telegram-text {
+      font-size: $font-size;
+      padding-top: 2px;
+      padding-bottom: 4px;
+      text-transform: capitalize;
+    } 
+    svg {
+      height: 80px;
+      width: 80px;
+      padding-bottom: 16px;
+    }
   }
 }
 
@@ -279,10 +322,34 @@ body, html {
   height: 88vh;
   flex-direction: column;
   justify-content: center;
-  animation-name: spin;
-  animation-duration: 5000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear; 
+  .logo-container {
+    .logo {
+      animation-name: spin;
+      animation-duration: 5000ms;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear; 
+    }
+   
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1) rotate(30deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05) rotate(5deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+.pulse {
+  display: inline-block;
+  animation: pulse 2s ease-out;
 }
 
 @keyframes spin {
@@ -293,6 +360,33 @@ body, html {
       transform:rotate(360deg);
   }
 }
+
+.expand {
+  animation: expand 2s ease-out;
+}
+
+@keyframes expand {
+  from {
+      width:0%;
+  }
+  to {
+      width:100%;
+  }
+}
+
+.grow-down {
+  animation: growdown 2s ease-out;
+}
+
+@keyframes growdown {
+  from {
+      height:0%;
+  }
+  to {
+      height:100%;
+  }
+}
+
 
 
 .add-product-button {

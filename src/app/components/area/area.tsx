@@ -50,7 +50,6 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
       <div className="product-list">
         {product.map((product) => (
           <DisplayProduct 
-            key={product.name}
             product={product}
             setProduct={setProduct}
             setShowModal={setShowModal}/>
