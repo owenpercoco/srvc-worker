@@ -9,6 +9,9 @@ interface DataBaseProduct extends BaseProduct {
   id: number;
 }
 const SRVCpermissedkey = 'SRVC-permissed'
+if (typeof window === 'undefined' ) {
+  const localStorage = {}
+}
 export default function Inventory() {
   const [permissed, setPermissed] = useState(localStorage.getItem(SRVCpermissedkey) === 'allowed');
   const [passKey, setPassKey] = useState('');
