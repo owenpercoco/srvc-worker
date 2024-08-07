@@ -13,7 +13,13 @@ if (typeof window === 'undefined' ) {
   const localStorage = {}
 }
 export default function Inventory() {
-  const [permissed, setPermissed] = useState(localStorage.getItem(SRVCpermissedkey) === 'allowed');
+  let tmpToken: boolean = false
+  if (typeof window === 'undefined' ) {
+    let tmpToken = false
+  } else {
+    let tmpToken = localStorage.getItem(SRVCpermissedkey) === 'allowed'
+  }
+  const [permissed, setPermissed] = useState(tmpToken);
   const [passKey, setPassKey] = useState('');
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
   const [newProduct, setNewProduct] = useState<BaseProduct>({
@@ -100,8 +106,9 @@ export default function Inventory() {
   };
 
   useEffect(() => {
-    if (typeof window === 'undefined' ) return
-    localStorage.setItem(SRVCpermissedkey, permissed ? 'allowed' : 'false');
+    if (typeof window !== 'undefined' ) {
+      localStorage.setItem(SRVCpermissedkey, permissed ? 'allowed' : 'false');
+    }
   }, [permissed]);
 
   if (isLoading) return <div>Loading...</div>;
