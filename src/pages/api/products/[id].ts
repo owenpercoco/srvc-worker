@@ -27,7 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       break;
 
     case 'PUT':
-        console.log('looking for id: ', id)
+        console.log('looking for id: ', id);
+        console.log(req.body)
       try {
         const updatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true });
         if (!updatedProduct) {

@@ -97,7 +97,7 @@ export default function Inventory() {
   };
 
   useEffect(() => {
-    console.log(localStorage)
+    if (typeof window === 'undefined' ) return
     localStorage.setItem(SRVCpermissedkey, permissed ? 'allowed' : 'false');
   }, [permissed]);
 
