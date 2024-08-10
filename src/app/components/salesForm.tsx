@@ -46,7 +46,7 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
               onChange={(event, value) => {
                 if (typeof value === 'string') {
                   field.onChange(value); // Directly set the text input
-                } else if (value && typeof value === 'object') {
+                } else if (value && typeof value === 'object' && 'inputValue' in value) {
                   field.onChange(value?.inputValue || value);
                 }
               }}
