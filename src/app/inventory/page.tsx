@@ -1,8 +1,14 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from "react";
 import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
-import { Logo, Modal, ProductForm, ProductList } from "../components";
+import { Accordion, Logo, Modal, ProductForm, ProductList, SalesForm } from "../components";
 import { TextField } from "@mui/material";
+interface Sale {
+  _id: string;
+  telephone: string;
+  products: string[];
+  timestamp: string; // or Date, depending on how you manage dates
+}
 
 const SRVCpermissedkey = 'SRVC-permissed';
 
@@ -15,6 +21,8 @@ export default function Inventory() {
   });
   const [passKey, setPassKey] = useState('');
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [telephoneOptions, setTelephoneOptions] = useState<string[]>([]);
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
     description: "",
@@ -35,7 +43,17 @@ export default function Inventory() {
       setProducts(data.data);
       setIsLoading(false);
     }
+
+    async function fetchSales() {
+      const response = await fetch("/api/sales");
+      const data = await response.json();
+      setSales(data.sales);
+      const uniqueTelephones: string[] = Array.from(new Set(data.sales.map((sale: any) => sale.telephone)));
+      setTelephoneOptions(uniqueTelephones);
+    }
+
     fetchProducts();
+    fetchSales();
   }, []);
 
   const handlePassKey = async () => {
@@ -85,14 +103,21 @@ export default function Inventory() {
     }
   };
 
-  const handleDeleteProduct = async (index: number) => {
-    const product = products[index];
-    if (product._id) {
-      await fetch(`/api/products/${product._id}`, {
-        method: "DELETE",
+  const handleSaveSale = async (data: any) => {
+    try {
+      const response = await fetch("/api/sales", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
-      const newProducts = products.filter((_, i) => i !== index);
-      setProducts(newProducts);
+      const newSaleData = await response.json();
+      setSales([...sales, newSaleData.data]);
+      return true;
+    } catch (error) {
+      console.error("Failed to add new sale:", error);
+      return false;
     }
   };
 
@@ -118,7 +143,10 @@ export default function Inventory() {
 
   return (
     <div className="inventory-container">
-      <ProductList products={products} setProducts={setProducts} />
+      <Accordion title="Current Products" expanded={true}>
+        <ProductList products={products} setProducts={setProducts} />
+      </Accordion>
+
       <button
         className="add-product-button"
         onClick={() => setIsModalOpen(true)}
@@ -135,6 +163,19 @@ export default function Inventory() {
           expanded
         />
       </Modal>
+
+      <Accordion title="Sales" expanded={false}>
+        <SalesForm onSave={handleSaveSale} products={products} telephoneOptions={telephoneOptions}/>
+        <div className="sales-list">
+          {sales.map((sale) => (
+            <div key={sale._id} className="sale-item">
+              <p>Telephone: {sale.telephone}</p>
+              <p>Products: {sale.products.join(', ')}</p>
+              <p>Date: {new Date(sale.timestamp).toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
+      </Accordion>
     </div>
   );
 }
