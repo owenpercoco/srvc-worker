@@ -107,9 +107,9 @@ export default function Home() {
             />
             <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
             <div className="delivery-info-container info-container">
-              <span>minimum required for delivery:</span>
+              <span>delivery minimums are:</span>
               <span>Manhattan: $50</span>
-              <span>Brooklyn: $100</span>
+              <span>Brooklyn & Queens: $100</span>
             </div>
           </div>
         </div>

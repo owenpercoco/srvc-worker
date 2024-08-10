@@ -213,7 +213,8 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             <Button type="button" onClick={() => handleQuantityChange(1)}>+</Button>
           </div>
         </div>
-        <Button type="submit">Save</Button>
+        <div className="save-container">
+           <Button type="submit">Save</Button>
         {isSaved !== null && (
           <span
             style={{
@@ -227,6 +228,8 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           ></span>
         )}
         <Button type="button" onClick={onDelete}>Delete</Button>
+        </div>
+       
       </form>
     </Accordion>
   );

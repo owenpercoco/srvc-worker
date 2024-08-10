@@ -56,7 +56,8 @@ export default function Inventory() {
     setNewProduct({ ...newProduct, [field]: value });
   };
 
-  const handleSaveNewProduct = async () => {
+  const handleSaveNewProduct = async (data: any) => {
+    console.log("saving...", {...newProduct, ...data})
     try {
       const response = await fetch("/api/products", {
         method: "POST",
@@ -131,7 +132,7 @@ export default function Inventory() {
         <ProductForm
           product={newProduct}
           onInputChange={handleNewProductChange}
-          onSave={handleSaveNewProduct}
+          onSave={(data: any) => handleSaveNewProduct(data)}
           expanded
         />
       </Modal>

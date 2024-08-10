@@ -20,10 +20,10 @@ export default function ProductList({ products, setProducts }: ProductListProps)
     
       const handleSaveProduct = async (index: number, data?: any) => {
         const product = products[index];
-        // console.log("attempting save of ", {
-        //   ...product,
-        //   ...data
-        // })
+        console.log("attempting save of ", {
+          ...product,
+          ...data
+        })
   
         try {
           if (product._id) {
