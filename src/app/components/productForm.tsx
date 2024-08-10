@@ -111,6 +111,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             }}
             placeholder="Name"
             fullWidth
+            size="small"
           />
         </div>
         <div className="field-container">
@@ -123,6 +124,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             }}
             placeholder="Subtitle"
             fullWidth
+            size="small"
           />
         </div>
         <div className="field-container description">
@@ -136,7 +138,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             placeholder="Description"
             fullWidth
             multiline
-            rows={4}
+            rows={2}
           />
         </div>
         <div className="field-container">
@@ -184,6 +186,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
                 onChange={(e) => handlePriceChange(e.target.value)}
                 placeholder="Price"
                 fullWidth
+                size="small"
               />
             </div>
             {(watch('category') === 'sungrown' || watch('category') === 'premium' || watch('category') === 'preroll') && (

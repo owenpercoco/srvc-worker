@@ -57,7 +57,6 @@ export default function Inventory() {
   };
 
   const handleSaveNewProduct = async (data: any) => {
-    console.log("saving...", {...newProduct, ...data})
     try {
       const response = await fetch("/api/products", {
         method: "POST",
