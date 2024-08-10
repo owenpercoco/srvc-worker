@@ -38,16 +38,15 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
             <Autocomplete
               freeSolo
               options={telephoneOptions}
-              getOptionLabel={(option) => option}
               renderInput={(params) => (
                 <TextField {...params} {...field} placeholder="Enter or select a telephone number" fullWidth />
               )}
               onInputChange={(event, value) => field.onChange(value)}
               onChange={(event, value) => {
                 if (typeof value === 'string') {
-                  field.onChange(value); // Directly set the text input
-                } else if (value && typeof value === 'object' && 'inputValue' in value) {
-                  field.onChange(value?.inputValue || value);
+                  field.onChange(value);
+                } else if (value) {
+                  field.onChange(value as string);
                 }
               }}
             />
