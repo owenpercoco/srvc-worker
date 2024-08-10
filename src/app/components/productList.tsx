@@ -18,12 +18,12 @@ export default function ProductList({ products, setProducts }: ProductListProps)
       };
     
     
-      const handleSaveProduct = async (index: number, image?: string) => {
+      const handleSaveProduct = async (index: number, data?: any) => {
         const product = products[index];
-        console.log("attempting save of ", {
-          ...product,
-          image
-        })
+        // console.log("attempting save of ", {
+        //   ...product,
+        //   ...data
+        // })
   
         try {
           if (product._id) {
@@ -32,7 +32,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({...product, image}),
+              body: JSON.stringify({...product, ...data}),
             });
           } else {
             const response = await fetch("/api/products", {
@@ -75,7 +75,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
           key={product._id || index}
           product={product}
           onInputChange={(field, value) => handleInputChange(index, field, value)}
-          onSave={(image) => handleSaveProduct(index, image)}
+          onSave={(data) => handleSaveProduct(index, data)}
           onDelete={() => handleDeleteProduct(index)}
         />
       ))}

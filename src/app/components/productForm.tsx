@@ -92,7 +92,8 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
 
   const onSubmit = async (data: any) => {
     let imageUrl = watch('image')
-    const success = await onSave(imageUrl);
+    let category = watch('category')
+    const success = await onSave({image:imageUrl, category});
     setIsSaved(success);
     setTimeout(() => setIsSaved(null), 2000);
   };
