@@ -1,14 +1,8 @@
 "use client";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { BaseProduct, categoryEnum } from "@/data/inventory";
-import { ProductForm, TextInput } from "../components/";
-import { Logo, Modal} from "../../components";
+import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
+import { ProductForm } from "../components";
 
-
-interface DataBaseProduct extends BaseProduct {
-  _id: string;
-  id: number;
-}
 
 interface ProductListProps {
     products: DataBaseProduct[]
@@ -24,8 +18,13 @@ export default function ProductList({ products, setProducts }: ProductListProps)
       };
     
     
-      const handleSaveProduct = async (index: number) => {
+      const handleSaveProduct = async (index: number, image?: string) => {
         const product = products[index];
+        console.log("attempting save of ", {
+          ...product,
+          image
+        })
+  
         try {
           if (product._id) {
             await fetch(`/api/products/${product._id}`, {
@@ -33,7 +32,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(product),
+              body: JSON.stringify({...product, image}),
             });
           } else {
             const response = await fetch("/api/products", {
@@ -76,7 +75,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
           key={product._id || index}
           product={product}
           onInputChange={(field, value) => handleInputChange(index, field, value)}
-          onSave={() => handleSaveProduct(index)}
+          onSave={(image) => handleSaveProduct(index, image)}
           onDelete={() => handleDeleteProduct(index)}
         />
       ))}

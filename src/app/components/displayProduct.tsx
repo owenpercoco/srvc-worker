@@ -1,6 +1,5 @@
-import React, { useState, Dispatch, SetStateAction, useRef } from 'react';
+import React, { useState, Dispatch, SetStateAction, useRef, useEffect } from 'react';
 import { BaseProduct } from '@/data/inventory';
-import { TypeEnum } from '@/data/inventory';
 
 interface FlowerProps {
   product: BaseProduct;
@@ -32,6 +31,7 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
   const handleTouch = () => {
     setHover(true);
     hovering.current = true;
+    
     setTimeout(() => {
       if (hovering.current) {
         setProduct(product);
@@ -44,16 +44,22 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
     }, 500);
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (hover) {
+        setHover(false)
+        hovering.current = false
+      }
+    }, 600)
+   
+  }, [hover])
+
   return (
     <div
       key={product.name}
       className={`product ${hover ? 'hover' : ''}`}
-      onTouchStart={handleTouch}
-      onTouchEnd={() => {hovering.current = false;}}
-      onClick={() => {setShowModal(true); setProduct(product)}}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
     >
+      <div className="touch-response" onTouchStart={handleTouch}></div>
       <div className="hover-bg"></div>
       <div className="product-row">
         <span className="product-name">{product.name}</span>
@@ -67,7 +73,6 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
           <span className="product-type">{frontEndTypeMap[product.type]}</span>
         )}
       </div>
-
       {showDescription && (
         <div className="product-row">
           <span className="product-description">{product.description}</span>
@@ -76,3 +81,5 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
     </div>
   );
 }
+
+export default DisplayProduct

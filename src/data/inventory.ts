@@ -20,8 +20,15 @@ export interface BaseProduct {
     quantity: number
     // category of product, controls where it shows on the menu
     category: categoryEnum
+    // display image for the product
+    image?: string;
 }
 
+
+export interface DataBaseProduct extends BaseProduct {
+  _id: string;
+  id: number;
+}
 
 export interface FlowerProduct extends BaseProduct {
     type: 'indica' | 'sativa' | 'hybrid';

@@ -25,15 +25,17 @@ body, html {
   overflow: scroll;
 }
 
-* {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .wrapper {
   display: flex;
   justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  &.vertical {
+    flex-direction: column;
+  }
 }
 // Use variables in the .container class
 .container {
@@ -47,7 +49,6 @@ body, html {
     flex-direction: row;
     gap: $gap-size;
     padding: $gap-size;
-    margin-bottom: 40px;
     .middle-seperator {
       background-color: $black-color;
       width: 2px;
@@ -65,98 +66,6 @@ body, html {
 }
 
 
-
-.product-container {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: $gap-size * 2;
-  .product-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: $font-size * 1.5;
-    font-weight: 900;
-    text-transform: uppercase;
-    padding: 0 $gap-size/4;
-    margin-bottom: $gap-size/2;
-    span {
-      font-size: $font-size;
-      font-weight: 900;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-    }
-    &.premium {
-      background-color: $black-color;
-      color: $background-color;
-      font-size: $font-size;
-      h2 {
-        font-size: $font-size;
-      }
-    }
-    + div {
-      padding-left: 2px;
-    }
-  }
-  .product {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 4px 0px 4px;
-    &.hover {
-      background-color: darken($background-color, 8);
-      transition: background-color 0.5s ease-in-out;
-      padding: 10px 4px 0px 4px;
-      border-radius: 8px;
-      color: lighten($black-color, 30)
-    }
-    .product-row {
-      display: flex;
-      flex: 1 1 auto;
-      gap: $gap-size/2;
-      justify-content: space-between;
-      padding-bottom: $gap-size/2;
-
-      .product-name, .product-price, .product-type, .product-amount {
-        font-size: $font-size;
-        text-transform: uppercase;
-        font-weight: 600;
-        flex-shrink: 0;
-              }
-      .product-name {
-        margin-right: auto;
-        flex-shrink: 1;
-      }
-      .product-description {
-        font-size: $font-size * .75;
-        font-weight: 500;
-        text-transform: lowercase;
-      }
-    }
-  }
-}
-.product {
-  position: relative;
-  overflow: hidden;
-}
-
-.product .hover-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0;
-  background-color: rgba(0, 0, 0, 0.1); /* Change to your desired background color */
-  transition: width 0.5s ease-in-out;
-  z-index: 0;
-}
-
-.product.hover .hover-bg {
-  width: 100%;
-}
-
-.product .product-row {
-  position: relative;
-  z-index: 1;
-}
 .logo-container {
   display: flex;
   justify-content: center;
@@ -405,4 +314,19 @@ body, html {
   font-size: 2rem;
   cursor: pointer;
   z-index: 1000;
+}
+
+
+.image-row {
+  padding: 12px;
+  margin: auto;
+}
+
+.delivery-info-container {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: $gap-size/2;
+  font-size: $font-size;
+  color: $black-color;
 }

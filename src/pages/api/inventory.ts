@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const fetchStart = Date.now();
     const products: BaseProduct[] = await Product.find({ quantity: { $gt: 0 } }).lean();
-    console.log(`Fetched products in ${Date.now() - fetchStart}ms`, products);
+    console.log(`Fetched products in ${Date.now() - fetchStart}ms`);
 
     const filterStart = Date.now();
 

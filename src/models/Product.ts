@@ -57,6 +57,9 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
     type: Number,
     default: () => 1,
   },
+  image: {
+    type: String,
+  }
 });
 
 const Product: Model<IProduct> = mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);

@@ -1,8 +1,8 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { returnData, BaseProduct } from '@/data/inventory';
-import { SrvcFooter, Logo, Modal, TelegramLink } from './components/';
-import { Area } from './components/area';
+import { SrvcFooter, Logo, Modal, TelegramLink, Area, Container } from './components/';
+import Image from 'next/image';
 
 export default function Home() {
   const [data, setData] = useState<returnData>()
@@ -106,6 +106,11 @@ export default function Home() {
               setShowModal={setShowModal}
             />
             <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
+            <div className="delivery-info-container info-container">
+              <span>minimum required for delivery:</span>
+              <span>Manhattan: $50</span>
+              <span>Brooklyn: $100</span>
+            </div>
           </div>
         </div>
       <SrvcFooter />
@@ -128,6 +133,19 @@ export default function Home() {
             <div className='modal-row'>
                 <span className="modal-text">{product.description}</span>
             </div>
+            <div className='modal-row image-row'>
+                {product.image ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={250} 
+                    height={250}
+                    objectFit='cover'
+                  />
+                ) : (
+                  <span></span>
+                )}
+              </div>
           </div>
           )}
     </Modal>

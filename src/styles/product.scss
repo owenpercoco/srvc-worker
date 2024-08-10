@@ -1,0 +1,98 @@
+
+// Declare variables
+$black-color: #08080a;
+$background-color: #e0d8cb;
+$font-size: 9px;
+$gap-size: 8px;
+$max-width: 412px;
+
+    .area-container {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: $gap-size * 2;
+        .area-header {
+          display: flex;
+          justify-content: space-between;
+          font-size: $font-size * 1.5;
+          font-weight: 900;
+          text-transform: uppercase;
+          padding: 0 $gap-size/4;
+          margin-bottom: $gap-size/2;
+          span {
+            font-size: $font-size;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+          }
+          &.premium {
+            background-color: $black-color;
+            color: $background-color;
+            font-size: $font-size;
+            h2 {
+              font-size: $font-size;
+            }
+          }
+          + div {
+            padding-left: 2px;
+          }
+        }
+        .product {
+          display: flex;
+          flex-direction: column;
+          padding: 10px 4px 0px 4px;
+          position: relative;
+          overflow: hidden;
+          .touch-response {
+            position: absolute;
+            height: 100%;
+            width: 80%;
+          }
+          &.hover {
+            background-color: darken($background-color, 8);
+            transition: background-color 0.5s ease-in-out;
+            padding: 10px 4px 0px 4px;
+            border-radius: 8px;
+            color: lighten($black-color, 30)
+          }
+          .product-row {
+            display: flex;
+            flex: 1 1 auto;
+            gap: $gap-size/2;
+            justify-content: space-between;
+            padding-bottom: $gap-size/2;
+      
+            .product-name, .product-price, .product-type, .product-amount {
+              font-size: $font-size;
+              text-transform: uppercase;
+              font-weight: 600;
+              flex-shrink: 0;
+                    }
+            .product-name {
+              margin-right: auto;
+              flex-shrink: 1;
+            }
+            .product-description {
+              font-size: $font-size * .75;
+              font-weight: 500;
+              text-transform: lowercase;
+            }
+          }
+        }
+      }
+
+      
+      .product .hover-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0;
+        background-color: rgba(0, 0, 0, 0.1); /* Change to your desired background color */
+        transition: width 0.5s ease-in-out;
+        z-index: 0;
+      }
+      
+      .product.hover .hover-bg {
+        width: 100%;
+      }

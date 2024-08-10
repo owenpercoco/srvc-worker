@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { ConcentrateProduct, BaseProduct } from '@/data/inventory';
-import { DisplayProduct } from './components/displayProduct'
+import { DisplayProduct } from './displayProduct'
 
 interface Props {
   title: string;
@@ -43,8 +43,8 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
 
     }
   return (
-    <div className="product-container">
-      <div className={`product-header ${premium ? 'premium' : ''}`}>
+    <div className="area-container">
+      <div className={`area-header ${premium ? 'premium' : ''}`}>
         {headerFromTitle(title)}
       </div>
       <div className="product-list">

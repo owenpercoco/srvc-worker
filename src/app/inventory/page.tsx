@@ -1,26 +1,21 @@
 "use client";
-import { useState, useEffect } from "react";
-import { BaseProduct, categoryEnum } from "@/data/inventory";
-import { ProductForm, TextInput, ProductList } from "./components/";
-import { Logo, Modal} from "../components";
+import { useState, useEffect, ChangeEvent } from "react";
+import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
+import { Logo, Modal, ProductForm, ProductList } from "../components";
+import { TextField } from "@mui/material";
 
-interface DataBaseProduct extends BaseProduct {
-  _id: string;
-  id: number;
-}
-const SRVCpermissedkey = 'SRVC-permissed'
+const SRVCpermissedkey = 'SRVC-permissed';
 
 export default function Inventory() {
-  let tmpToken: boolean = false
-  if (typeof window !== 'undefined' ) {
-    tmpToken = localStorage.getItem(SRVCpermissedkey) === 'allowed'
-  } else {
-    tmpToken = false
-  }
-  const [permissed, setPermissed] = useState(tmpToken);
+  const [permissed, setPermissed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(SRVCpermissedkey) === 'allowed';
+    }
+    return false;
+  });
   const [passKey, setPassKey] = useState('');
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
-  const [newProduct, setNewProduct] = useState<BaseProduct>({
+  const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
     description: "",
     subtitle: "",
@@ -28,7 +23,7 @@ export default function Inventory() {
     price: undefined,
     amount: "",
     quantity: 1,
-    category: categoryEnum.sungrown,
+    category: undefined,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -52,8 +47,7 @@ export default function Inventory() {
       body: JSON.stringify({ passKey }),
     }).then(data => {
       if (data.status === 200) {
-        setPermissed(true)
-
+        setPermissed(true);
       }
     });
   }
@@ -61,7 +55,6 @@ export default function Inventory() {
   const handleNewProductChange = (field: string, value: any) => {
     setNewProduct({ ...newProduct, [field]: value });
   };
-
 
   const handleSaveNewProduct = async () => {
     try {
@@ -104,7 +97,7 @@ export default function Inventory() {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined' ) {
+    if (typeof window !== 'undefined') {
       localStorage.setItem(SRVCpermissedkey, permissed ? 'allowed' : 'false');
     }
   }, [permissed]);
@@ -112,16 +105,17 @@ export default function Inventory() {
   if (isLoading) return <div>Loading...</div>;
   if (!permissed) return (
     <div className="logo-container pass-key-container">
-      <Logo/>
+      <Logo />
       this area is protected
-      <TextInput
+      <TextField
         value={passKey}
-        setValue={setPassKey}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setPassKey(event?.target.value)}
         placeholder="password"
-        />
+      />
       <button type="submit" onClick={handlePassKey}>enter</button>
     </div>
-  )
+  );
+
   return (
     <div className="inventory-container">
       <ProductList products={products} setProducts={setProducts} />
