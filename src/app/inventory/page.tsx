@@ -20,6 +20,7 @@ export default function Inventory() {
     return false;
   });
   const [passKey, setPassKey] = useState('');
+  const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
   const [telephoneOptions, setTelephoneOptions] = useState<string[]>([]);
@@ -57,6 +58,7 @@ export default function Inventory() {
   }, []);
 
   const handlePassKey = async () => {
+    setPassCheck(true);
     await fetch(`/api/passKey`, {
       method: "POST",
       headers: {
@@ -68,6 +70,7 @@ export default function Inventory() {
         setPermissed(true);
       }
     });
+    setPassCheck(false)
   }
 
   const handleNewProductChange = (field: string, value: any) => {
@@ -131,13 +134,15 @@ export default function Inventory() {
   if (!permissed) return (
     <div className="logo-container pass-key-container">
       <Logo />
-      this area is protected
+      {passCheck && (<span>checking pass key</span>)}
+      {!passCheck && <span>this area is protected</span>}
+
       <TextField
         value={passKey}
         onChange={(event: ChangeEvent<HTMLInputElement>) => setPassKey(event?.target.value)}
         placeholder="password"
       />
-      <button type="submit" onClick={handlePassKey}>enter</button>
+      <button type="submit" onClick={handlePassKey} onTouchStart={handlePassKey}>enter</button>
     </div>
   );
 
