@@ -3,7 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { BaseProduct, categoryEnum, Price } from '@/data/inventory';
 import { TextField, Select, MenuItem, Button } from '@mui/material';
 import Accordion from './accordion';
-import ImageUploader from './ImageUploader'; // Import the new component
+import ImageUploader from './imageUploader'; // Import the new component
 
 interface ProductFormProps {
   product: Partial<BaseProduct>;
