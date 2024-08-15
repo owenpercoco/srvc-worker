@@ -1,5 +1,5 @@
 import React, { useState, Dispatch, SetStateAction, useRef, useEffect } from 'react';
-import { BaseProduct } from '@/data/inventory';
+import { BaseProduct, Price } from '@/data/inventory';
 
 interface FlowerProps {
   product: BaseProduct;
@@ -15,11 +15,16 @@ const frontEndTypeMap = {
   'sativadominant': 'SH'
 }
 
-function priceArea(price: number | number[]): string {
-  if (Array.isArray(price) && price.length > 0) {
-    return price.map(value => `$${value}`).join(', ');
+const priceDisplay = (priceValue: Price | Price[] | undefined): string => {
+  if (priceValue === undefined) return '' 
+  let displayString = ''
+
+  if (Array.isArray(priceValue)) {
+      displayString = priceValue.map((price) => `$${price.amount}`).join(" ");
+  } else {
+    displayString = `$${priceValue.amount} ${priceValue.description}`
   }
-  return `$${price}`;
+  return displayString;
 }
 
 export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProps) {
@@ -64,11 +69,8 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
       <div className="product-row">
         <span className="product-name">{product.name}</span>
         <span className="product-price">
-          {priceArea(product.price || [])}
+          {priceDisplay(product.price)}
         </span>
-        {product.amount !== undefined && (
-          <span className="product-type">{product.amount}</span>
-        )}
         {product.type !== undefined && (
           <span className="product-type">{frontEndTypeMap[product.type]}</span>
         )}

@@ -6,6 +6,7 @@ interface ISale extends Document {
   telephone: string;
   products: string[];  
   timestamp: Date;
+  confirmed: boolean;
 }
 
 
@@ -34,6 +35,10 @@ const SaleSchema: Schema<ISale> = new Schema<ISale>({
     type: Date,
     default: Date.now,
   },
+  confirmed: {
+    type: Boolean,
+    default: false
+  }
 });
 
 // Create the Sale model

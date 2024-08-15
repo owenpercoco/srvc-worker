@@ -1,10 +1,9 @@
-import React, { ChangeEvent, useState, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { BaseProduct, categoryEnum } from '@/data/inventory';
+import React, { useEffect, useState } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { BaseProduct, categoryEnum, Price } from '@/data/inventory';
 import { TextField, Select, MenuItem, Button } from '@mui/material';
 import Accordion from './accordion';
-import Image from 'next/image';
-import type { PutBlobResult } from '@vercel/blob';
+import ImageUploader from './ImageUploader'; // Import the new component
 
 interface ProductFormProps {
   product: Partial<BaseProduct>;
@@ -15,23 +14,63 @@ interface ProductFormProps {
 }
 
 function ProductForm({ product, onInputChange, onSave, onDelete, expanded = false }: ProductFormProps) {
-  const inputFileRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
-  const { handleSubmit, watch, setValue } = useForm({
+
+  const { handleSubmit, watch, setValue, control } = useForm({
     defaultValues: {
       name: product.name,
       subtitle: product.subtitle || '',
       description: product.description || '',
-      price: product.price !== undefined ? product.price.toString() : '',
-      amount: product.amount || '',
+      price: (() => {
+        if (Array.isArray(product.price)) {
+          // Check if it's the old array format (array of numbers)
+          if (product.price.every(p => typeof p === 'number')) {
+            // Convert array of numbers to array of Price objects
+            return product.price.map((p, index) => {
+              let description = `pack`;
+              let quantity = 1
+              if (product.category === 'sungrown') {
+                const sungrownDescriptions : [number, string][] = [[.25, '¼'], [1, 'oz']] ;
+                description = sungrownDescriptions[index][1]
+                quantity = sungrownDescriptions[index][0]
+              } else if (product.category === 'premium') {
+                const premiumDescriptions : [number, string][] = [[.125, '⅛'], [.25, '¼'], [.5, '½'], [1, 'oz']];
+                description = premiumDescriptions[index][1]
+                quantity = premiumDescriptions[index][0]
+              }
+              return {
+                amount: p,
+                quantity: quantity,
+                description: description,
+              };
+            });
+          } else if (product.price.every(p => typeof p === 'object' && p.amount !== undefined)) {
+            return product.price;
+          }
+        } else if (typeof product.price === 'number') {
+          // Old format with single number price
+          return [{
+            amount: product.price,
+            quantity: 1,
+            description: product.amount || '',
+          }];
+        }
+        // If none of the above, return an empty array
+        return [];
+      })(),
       category: product.category || '',
       type: product.type || '',
       quantity: product.quantity,
       image: product.image,
     },
   });
+  
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'price',
+  });
+  
 
+ 
   const [isSaved, setIsSaved] = useState<null | boolean>(null);
 
   const handleQuantityChange = (increment: number) => {
@@ -40,60 +79,25 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
     onInputChange('quantity', newQuantity);
   };
 
-  const handlePriceChange = (value: string) => {
-    const prices = value.split(',').map(v => v.trim()).map(Number);
-    if (prices.length === 1 && !isNaN(prices[0])) {
-      setValue('price', value);
-      onInputChange('price', prices[0]);
-    } else {
-      setValue('price', value);
-      onInputChange('price', prices.filter(v => !isNaN(v)));
-    }
-  };
-
   const handleCategoryChange = (value?: categoryEnum) => {
     if (value === undefined) return;
     setValue('category', value || '');
     onInputChange('category', value || '');
+
     if (value === 'sungrown') {
-      setValue('price', '60,200');
-      onInputChange('price', [60, 200]);
-    } else if (value === 'premium') {
-      setValue('price', '50,80,160,300');
-      onInputChange('price', [50, 80, 160, 300]);
+      setValue('price', [
+        { amount: 60, quantity: .25, description: '¼ oz' },
+        { amount: 200, quantity: 1, description: '1 oz' },
+      ]);
     } else {
-      setValue('price', '');
-      onInputChange('price', '');
+      setValue('price', []);
     }
-  };
-
-  const handleImageUpload = async () => {
-    if (!inputFileRef.current?.files) {
-      throw new Error("No file selected");
-    }
-    console.log("in handle image upload")
-    const file = inputFileRef.current.files[0];
-    setUploading(true);
-    
-    const response = await fetch(`/api/files?filename=${file.name}`, {
-      method: 'POST',
-      body: file,
-    });
-    const newBlob = (await response.json()) as PutBlobResult;
-    setUploading(false);
-    setBlob(newBlob);
-
-    if (newBlob.url) {
-      setValue('image', newBlob.url);
-      onInputChange('image', newBlob.url);
-    }
-    return newBlob.url
   };
 
   const onSubmit = async (data: any) => {
-    let imageUrl = watch('image')
-    let category = watch('category')
-    const success = await onSave({image:imageUrl, category});
+    const imageUrl = watch('image');
+    const category = watch('category');
+    const success = await onSave({ ...data, image: imageUrl, category });
     setIsSaved(success);
     setTimeout(() => setIsSaved(null), 2000);
   };
@@ -142,23 +146,35 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           />
         </div>
         <div className="field-container">
+            <label>Type</label>
+            <Select
+              value={watch('type')}
+              onChange={(e) => {
+                setValue('type', e.target.value);
+                onInputChange('type', e.target.value);
+              }}
+              fullWidth
+            >
+              <MenuItem value="indica">Indica</MenuItem>
+              <MenuItem value="sativa">Sativa</MenuItem>
+              <MenuItem value="hybrid">Hybrid</MenuItem>
+              <MenuItem value="indicadominant">Ind Dom</MenuItem>
+              <MenuItem value="sativadominant">Sat Dom</MenuItem>
+            </Select>
+          </div>
+        <div className="field-container">
           <label>Image</label>
-          <input
-            type="file"
-            ref={inputFileRef}
-            disabled={uploading}
-            onChange={handleImageUpload}
+          <ImageUploader
+            imageUrl={watch('image')}
+            onImageUpload={(url) => {
+              setValue('image', url);
+              onInputChange('image', url);
+            }}
+            onImageDelete={() => {
+              setValue('image', '');
+              onInputChange('image', '');
+            }}
           />
-          {uploading && <span>Uploading...</span>}
-          {blob?.url || product.image && (
-            <Image
-              src={blob?.url || product.image}
-              alt="Product Image"
-              width={250} // Adjust width as needed
-              height={250} // Adjust height as needed
-              objectFit="cover"
-            />
-          )}
         </div>
         <div className="field-container">
           <label>Category</label>
@@ -179,34 +195,52 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
         </div>
         {watch('category') && (
           <>
-            <div className="field-container">
-              <label>Price</label>
-              <TextField
-                value={watch('price')}
-                onChange={(e) => handlePriceChange(e.target.value)}
-                placeholder="Price"
-                fullWidth
-                size="small"
-              />
-            </div>
-            {(watch('category') === 'sungrown' || watch('category') === 'premium' || watch('category') === 'preroll') && (
-              <div className="field-container">
-                <label>Type</label>
-                <Select
-                  value={watch('type')}
-                  onChange={(e) => {
-                    setValue('type', e.target.value);
-                    onInputChange('type', e.target.value);
-                  }}
-                  fullWidth
-                >
-                  <MenuItem value="">Select Type</MenuItem>
-                  <MenuItem value="indica">Indica</MenuItem>
-                  <MenuItem value="sativa">Sativa</MenuItem>
-                  <MenuItem value="hybrid">Hybrid</MenuItem>
-                </Select>
+            <label>Prices</label>
+            {fields.map((field, index) => (
+              <div key={field.id} className="field-container">
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <TextField
+                    label="Quantity"
+                    value={field.quantity}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      setValue(`price.${index}.quantity`, value);
+                      onInputChange(`prices.${index}.quantity`, value);
+                    }}
+                    placeholder="Quantity"
+                    fullWidth
+                    size="small"
+                  />
+                  <TextField
+                    label="Price ($)"
+                    value={field.amount}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      setValue(`price.${index}.amount`, value);
+                      onInputChange(`prices.${index}.amount`, value);
+                    }}
+                    placeholder="Price"
+                    fullWidth
+                    size="small"
+                  />
+                  <TextField
+                    label="Description"
+                    value={field.description}
+                    onChange={(e) => {
+                      setValue(`price.${index}.description`, e.target.value);
+                      onInputChange(`prices.${index}.description`, e.target.value);
+                    }}
+                    placeholder="Description"
+                    fullWidth
+                    size="small"
+                  />
+                  <Button onClick={() => remove(index)}>-</Button>
+                </div>
               </div>
-            )}
+            ))}
+            <Button onClick={() => append({ amount: 0, quantity: 0, description: '' })}>
+              Add Price
+            </Button>
           </>
         )}
         <div className="field-container">
@@ -217,22 +251,21 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           </div>
         </div>
         <div className="save-container">
-           <Button type="submit">Save</Button>
-        {isSaved !== null && (
-          <span
-            style={{
-              display: 'inline-block',
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-              backgroundColor: isSaved ? 'green' : 'red',
-              marginLeft: '10px',
-            }}
-          ></span>
-        )}
-        <Button type="button" onClick={onDelete}>Delete</Button>
+          <Button type="submit">Save</Button>
+          {isSaved !== null && (
+            <span
+              style={{
+                display: 'inline-block',
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: isSaved ? 'green' : 'red',
+                marginLeft: '10px',
+              }}
+            ></span>
+          )}
+          <Button type="button" onClick={onDelete}>Delete</Button>
         </div>
-       
       </form>
     </Accordion>
   );
