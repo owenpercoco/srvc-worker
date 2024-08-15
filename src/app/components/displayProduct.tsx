@@ -11,8 +11,8 @@ const frontEndTypeMap = {
   'sativa': 'SAT',
   'indica': 'IND',
   'hybrid': 'HYB',
-  'indicadominant': 'IH',
-  'sativadominant': 'SH'
+  'indicadominant': 'IND HYB',
+  'sativadominant': 'SAT HYB'
 }
 
 const priceDisplay = (priceValue: Price | Price[] | undefined): string => {
@@ -71,7 +71,7 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
         <span className="product-price">
           {priceDisplay(product.price)}
         </span>
-        {product.type !== undefined && (
+        {product.type && (
           <span className="product-type">{frontEndTypeMap[product.type]}</span>
         )}
       </div>

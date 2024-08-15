@@ -11,7 +11,7 @@ type Data = {
 
 function checkType(type: string | undefined) {
   if (type === undefined) return false;
-  return ['indica', 'sativa', 'hybrid'].includes(type);
+  return true;
 }
 
 // Type guard to check if a product is a SungrownProduct
@@ -74,7 +74,6 @@ function processData(data: BaseProduct[]): returnData {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    console.log("API route called");
 
     const start = Date.now();
     await connect();
