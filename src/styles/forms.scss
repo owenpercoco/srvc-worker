@@ -1,3 +1,10 @@
+// Declare variables
+$black-color: #08080a;
+$background-color: #e0d8cb;
+$font-size: 9px;
+$gap-size: 8px;
+$max-width: 412px;
+
 .text-input-container {
     position: relative;
     display: inline-block;
@@ -80,6 +87,11 @@
     display: flex;
     flex-direction: row;
     gap: 12px;
+    button {
+      border: 1px solid $black-color;
+      border-radius: 8px;
+      font-weight: bolder;
+    }
   }
 
 .save-container {
