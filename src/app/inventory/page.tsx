@@ -30,7 +30,6 @@ export default function Inventory() {
     subtitle: "",
     type: undefined,
     price: undefined,
-    amount: "",
     quantity: 1,
     category: undefined,
   });
@@ -132,7 +131,7 @@ export default function Inventory() {
 
   if (isLoading) return <div>Loading...</div>;
   if (!permissed) return (
-    <div className="logo-container pass-key-container">
+    <div className="logo-container pass-key-container column">
       <Logo />
       {passCheck && (<span>checking pass key</span>)}
       {!passCheck && <span>this area is protected</span>}

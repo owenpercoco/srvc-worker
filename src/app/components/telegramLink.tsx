@@ -7,7 +7,7 @@ interface TelegramLinkProps {
 const TelegramLink = ({ url }: TelegramLinkProps) => {
   return (
     <a href={url} className="telegram-link" target="_blank" rel="noopener noreferrer">
-    <div className="telegram-container">
+    <div className="telegram-container column">
       <span className="telegram-text">
         Order now on Telegram
       </span>

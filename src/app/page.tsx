@@ -1,32 +1,56 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { returnData, BaseProduct } from '@/data/inventory';
-import { SrvcFooter, Logo, Modal, TelegramLink, Area, Container } from './components/';
+import { returnData, BaseProduct, Order, Price, mockData } from '@/data/inventory';
+import { SrvcFooter, Logo, Modal, TelegramLink, Area, Container, OrderComponent } from './components/';
 import Image from 'next/image';
 
 export default function Home() {
   const [data, setData] = useState<returnData>()
   const [showModal, setShowModal] = useState<boolean>(false);
   const [product, setProduct] = useState<BaseProduct | undefined>()
+  const defaultPrices: Price[] = [
+    {
+      amount: 45,
+      quantity: .125,
+      description: "⅛",
+      name: "Sour Diesel",
+    },
+    {
+      amount: 85,
+      quantity: .25,
+      description: "¼",
+      name: "Tyson",
+    },
+    {
+      amount: 160,
+      quantity: .5,
+      description: "½",
+      name: "Purple Cream",
+    },
+  ];
 
-  const priceDisplay = (priceValue: number | number[] | undefined): string => {
+  const [order, setOrder] = useState<Order>({
+    orders: defaultPrices,
+  });
+
+
+  const priceDisplay = (priceValue: Price | Price[] | undefined): string => {
     if (priceValue === undefined) return '' 
     let displayString = ''
-    let displayAmounts = ['⅛', '¼', '½', 'oz']
-
-    if (typeof priceValue === "number") {
-        displayString = `$${priceValue}`
-    } else if (Array.isArray(priceValue)) {
-        if (priceValue.length === 2) displayAmounts = ['¼', 'oz']
-        displayString = priceValue.map((val, index) => `$${val} ${displayAmounts[index]}`).join(" • ");
+  
+    if (Array.isArray(priceValue)) {
+        displayString = priceValue.map((price) => `$${price.amount} ${price.description}`).join(" • ");
+    } else {
+      displayString = `$${priceValue.amount} ${priceValue.description}`
     }
     return displayString;
-}
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/api/inventory');
       const result = await response.json()
+      console.log(result)
       setData(result.data);
       console.log("data retrieved and set");
     };
@@ -35,7 +59,7 @@ export default function Home() {
   }, []);
   if (!data) {
     return (
-      <div className="loading-container">
+      <div className="loading-container column">
           <Logo />
       </div> 
     )
@@ -43,13 +67,13 @@ export default function Home() {
 
   return (
     <div className="wrapper">
-      <div className="container">
+      <div className="container column">
         <div className='info-container'>
           <span className="info-text">hold any menu item for more information</span>
         </div>
         
-      <div className="column-container">
-        <div className="left-column">
+      <div className="column-container row">
+        <div className="left-column column">
             <Logo />
             {/* Render Sungrown Products */}
             <hr className='expand'/>
@@ -79,7 +103,7 @@ export default function Home() {
             />
         </div>
         <div className='middle-seperator grow-down'></div>
-        <div className="right-column">
+        <div className="right-column column">
             {/* Render Premium Products */}
             <Area
               title='premium'
@@ -106,7 +130,7 @@ export default function Home() {
               setShowModal={setShowModal}
             />
             <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
-            <div className="delivery-info-container info-container">
+            <div className="delivery-info-container info-container column">
               <span>delivery minimums are:</span>
               <span>Manhattan: $50</span>
               <span>Upper Manhattan: $100</span>
@@ -114,27 +138,27 @@ export default function Home() {
             </div>
           </div>
         </div>
-      <SrvcFooter />
+      <SrvcFooter order={order}/>
     </div>
 
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         {product !== undefined && (
-        <div className='modal-wrapper'>
-          <div className='modal-row'>
-                <div className="modal-header">
-                    <h2>{product?.name}</h2>
-                    {product.type && <span className="modal-text">{product?.type}</span>}
-                    <hr/>
-                </div>
+        <div className='column'>
+            <div className="modal-header column">
+              <div className='row between'>
+                <span><h2>{product?.name}</h2></span>
+                {/* <OrderComponent product={product} order={order} setOrder={setOrder}/> */}
+              </div>
+                {product.type && <span className="modal-text">{product?.type}</span>}
+                <hr/>
             </div>
-            <div className='modal-row detail-row'>
+            <div className='row detail-row'>
                 <span className="modal-prices">{priceDisplay(product.price)}</span>
             </div>
-            <span className='modal-amount'>{product?.amount}</span>
-            <div className='modal-row'>
+            <div className='row'>
                 <span className="modal-text">{product.description}</span>
             </div>
-            <div className='modal-row image-row'>
+            <div className='row image-row'>
                 {product.image ? (
                   <Image
                     src={product.image}

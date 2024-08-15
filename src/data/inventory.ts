@@ -1,153 +1,167 @@
-export enum categoryEnum { sungrown = 'sungrown', premium = 'premium', edible = 'edible', preroll = 'preroll', concentrate = 'concentrate', psychadelic = 'psychadelic'}
-export enum TypeEnum { indica = 'indica', sativa='sativa', hybrid='hybrid', indicadominant='indicadominant', sativadominant='sativadominant'}
-export interface BaseProduct {
-    // id database fields
-    // uuid database fields
-    // name of the product
-    name: string; 
-    // optional description
-    description?: string;
-    // usually candy, appears small after title
-    subtitle?: string;
-    // strain typeing
-    type?: 'indica' | 'sativa' | 'hybrid';
-    // price of a single object
-    price?: number | number[];
-    // objects with multiple sizes get this
-    // front end value for the amount
-    amount?: string; 
-    // back end value for the amount we have
-    quantity: number
-    // category of product, controls where it shows on the menu
-    category: categoryEnum
-    // display image for the product
-    image?: string;
+export enum categoryEnum { 
+  sungrown = 'sungrown', 
+  premium = 'premium', 
+  edible = 'edible', 
+  preroll = 'preroll', 
+  concentrate = 'concentrate', 
+  psychadelic = 'psychadelic'
 }
 
+export enum TypeEnum { 
+  indica = 'indica', 
+  sativa = 'sativa', 
+  hybrid = 'hybrid', 
+  indicadominant = 'indicadominant', 
+  sativadominant = 'sativadominant'
+}
+
+export interface BaseProduct {
+  name: string; 
+  description?: string;
+  subtitle?: string;
+  type?: TypeEnum;
+  price?: Price | Price[];
+  amount?: string; // deprecated field
+  quantity: number;
+  category: categoryEnum;
+  image?: string;
+}
 
 export interface DataBaseProduct extends BaseProduct {
   _id: string;
   id: number;
 }
 
-export interface FlowerProduct extends BaseProduct {
-    type: 'indica' | 'sativa' | 'hybrid';
-    // usually 3 or 4
-    price: number[];
+export interface Order {
+  orders: Price[];
 }
 
-export interface SungrownProduct extends FlowerProduct {
-  price: number[]
+export interface Price {
+  amount: number; // the number in dollars charged
+  quantity: number; // the amount of product it represents
+  description: string; // a visual representation
+  name?: string // the name of the product I guess
 }
-export interface PremiumProduct extends FlowerProduct {
-  price: number[]
+
+export interface FlowerProduct extends BaseProduct {
+  type: TypeEnum;
 }
-export interface EdiblesProduct extends BaseProduct {
-    price: number;
-}
+
+export interface SungrownProduct extends FlowerProduct {}
+export interface PremiumProduct extends FlowerProduct {}
+export interface EdiblesProduct extends BaseProduct {}
 export interface PrerollProduct extends BaseProduct {
-    price: number;
-    type: 'indica' | 'sativa' | 'hybrid';
+  type: TypeEnum;
 }
-export interface ConcentrateProduct extends BaseProduct {
-  price: number;
-  // usually '1 gram'
-  amount: string; 
-}
-export interface PsychedelicProduct extends BaseProduct {
-  price: number;
-  // usually '1 gram'
-  amount: string; 
-}
+export interface ConcentrateProduct extends BaseProduct {}
+export interface PsychedelicProduct extends BaseProduct {}
+
 export interface returnData {
-    sungrown: SungrownProduct[]
-    premium: PremiumProduct[]
-    edibles: EdiblesProduct[]
-    psychedelics: PsychedelicProduct[]
-    prerolls: PrerollProduct[]
-    concentrates: ConcentrateProduct[]
+  sungrown: SungrownProduct[];
+  premium: PremiumProduct[];
+  edibles: EdiblesProduct[];
+  psychedelics: PsychedelicProduct[];
+  prerolls: PrerollProduct[];
+  concentrates: ConcentrateProduct[];
 }
+
+const sungrownPrice: Price[] = [
+  { amount: 60, description: 'quarter', quantity: .25 },
+  { amount: 200, description: 'oz', quantity: 1 }
+];
+
+const premiumPrice: Price[] = [
+  { amount: 45, description: 'eighth', quantity:.125 },
+  { amount: 85, description: 'quarter', quantity: .25 },
+  { amount: 160, description: 'half', quantity: .5 },
+  { amount: 320, description: 'oz', quantity: 1 }
+];
+
+const concentratePrice: Price = { amount: 50, description: '1 gram', quantity: 1 };
+
+// Sungrown Products
 const sungrownProducts: SungrownProduct[] = [
   {
     name: "Sour Diesel",
     description: "Top effects: energetic and uplifted",
-    type: "hybrid",
-    price: [60, 200],
+    type: TypeEnum.hybrid,
+    price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
   },
   {
     name: "Tyson",
     description: "Top effects: relaxed and hungry",
-    type: "hybrid",
-    price: [60, 200],
+    type: TypeEnum.hybrid,
+    price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
   },
   {
     name: "Purple Cream",
     description: "Top effects: hungry and sleepy",
-    type: "hybrid",
-    price: [60, 200],
+    type: TypeEnum.hybrid,
+    price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
   },
   {
     name: "Gary Payton",
     description: "Top effects: euphoric and giggly",
-    type: "hybrid",
-    price: [60, 200],
+    type: TypeEnum.hybrid,
+    price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
   },
   {
     name: "Bobcat",
     description: "Top effects: happy and creative",
-    type: "hybrid",
-    price: [60, 200],
+    type: TypeEnum.hybrid,
+    price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
   },
   {
     name: "Lemon Cherry Gelato",
     description: "Top effects: relaxed and giggly",
-    type: "hybrid",
-    price: [60, 200],
+    type: TypeEnum.hybrid,
+    price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
   },
 ];
 
+// Premium Products
 const premiumProducts: PremiumProduct[] = [
   {
     name: "Haze",
     description: "Top effects: uplifted and creative",
-    type: "sativa",
-    price: [45, 85, 160, 320],
+    type: TypeEnum.sativa,
+    price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
   },
   {
     name: "Guava Runts",
     description: "Top effects: giggly and aroused",
-    type: "hybrid",
-    price: [45, 85, 160, 320],
+    type: TypeEnum.hybrid,
+    price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
   },
   {
     name: "Gelotti",
     description: "Top effects: talkative and focused",
-    type: "hybrid",
-    price: [45, 85, 160, 320],
+    type: TypeEnum.hybrid,
+    price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
   },
   {
     name: "WH Bubble Gum",
     description: "Top effects: happy and giggly",
-    type: "hybrid",
-    price: [50, 90, 170, 330],
+    type: TypeEnum.hybrid,
+    price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -155,8 +169,8 @@ const premiumProducts: PremiumProduct[] = [
     name: "Gelato 33",
     subtitle: "candy",
     description: "Top effects: aroused and uplifted",
-    type: "hybrid",
-    price: [50, 90, 170, 330],
+    type: TypeEnum.hybrid,
+    price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
   },
@@ -164,107 +178,114 @@ const premiumProducts: PremiumProduct[] = [
     name: "Wagyu",
     subtitle: "candy",
     description: "Top effects: relaxed and sleepy",
-    type: "hybrid",
-    price: [55, 100, 190, 330],
+    type: TypeEnum.hybrid,
+    price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
   },
   {
     name: "Bazookalato",
     subtitle: "candy",
-    type: "hybrid",
-    price: [55, 100, 190],
+    type: TypeEnum.hybrid,
+    price: [
+      { amount: 55, description: 'eighth', quantity:.125  },
+      { amount: 100, description: 'quarter', quantity:.25 },
+      { amount: 190, description: 'half', quantity:.5 }
+    ],
     quantity: 1,
     category: categoryEnum.premium,
   },
 ];
 
+// Edibles Products
 const ediblesProducts: EdiblesProduct[] = [
   {
     name: "ya hemi gummies",
     description: "flavor: sour watermelon",
-    price: 25,
+    price: { amount: 25, description: "per pack", quantity: 1 },
     quantity: 1,
     category: categoryEnum.edible,
   },
   {
     name: "jelly wizards",
     description: "flavor: assorted",
-    price: 25,
+    price: { amount: 25, description: "per pack", quantity: 1 },
     quantity: 1,
     category: categoryEnum.edible,
   },
   {
     name: "lola gummies",
     description: "flavor: assorted",
-    price: 25,
+    price: { amount: 25, description: "per pack", quantity: 1 },
     quantity: 1,
     category: categoryEnum.edible,
   },
 ];
 
+// Psychedelic Products
 const psychedelicProducts: PsychedelicProduct[] = [
   {
     name: "raw mushrooms penis envy",
-    price: 35,
-    amount: "3.5 grams",
+    price: { amount: 35, description: "3.5 grams", quantity: 1 },
     quantity: 1,
     category: categoryEnum.psychadelic,
   },
 ];
 
+// Preroll Products
 const preRollProducts: PrerollProduct[] = [
   {
     name: "Premium Preroll",
-    price: 10,
-    amount: "1 gram",
-    type: "indica",
+    price: { amount: 10, description: "1 gram", quantity: 1 },
+    type: TypeEnum.indica,
     quantity: 1,
     category: categoryEnum.preroll,
   },
 ];
 
+// Concentrate Products
 const concentrateProducts: ConcentrateProduct[] = [
   {
     name: "friendly farms cured resin vape",
-    price: 50,
-    amount: "1 gram",
+    price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
   },
   {
     name: "waka disposable/live resin",
-    price: 50,
-    amount: "1 gram",
+    price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
   },
   {
     name: "batter",
-    price: 50,
-    amount: "1 gram",
+    price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
   },
   {
     name: "sugar",
-    price: 50,
-    amount: "1 gram",
+    price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
   },
 ];
 
-  
-export const productData = [...sungrownProducts,
-    ...premiumProducts, ...ediblesProducts, ...psychedelicProducts, ...preRollProducts, ...concentrateProducts]
-export const mockData: returnData = {
-    sungrown:  sungrownProducts,
-    premium: premiumProducts,
-    edibles: ediblesProducts,
-    psychedelics: psychedelicProducts,
-    prerolls: preRollProducts,
-    concentrates: concentrateProducts,
-  };
-  
+// Combined Data
+export const productData = [
+  ...sungrownProducts,
+  ...premiumProducts,
+  ...ediblesProducts,
+  ...psychedelicProducts,
+  ...preRollProducts,
+  ...concentrateProducts,
+];
 
+export const mockData: returnData = {
+  sungrown: sungrownProducts,
+  premium: premiumProducts,
+  edibles: ediblesProducts,
+  psychedelics: psychedelicProducts,
+  prerolls: preRollProducts,
+  concentrates: concentrateProducts,
+};
