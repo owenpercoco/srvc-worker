@@ -1,14 +1,9 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from "react";
 import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
-import { Accordion, Logo, Modal, ProductForm, ProductList, SalesForm } from "../components";
+import { Accordion, Logo, Modal, ProductForm, ProductList, SalesForm, SaleComponent } from "../components";
 import { TextField } from "@mui/material";
-interface Sale {
-  _id: string;
-  telephone: string;
-  products: string[];
-  timestamp: string; // or Date, depending on how you manage dates
-}
+
 
 const SRVCpermissedkey = 'SRVC-permissed';
 
@@ -22,7 +17,7 @@ export default function Inventory() {
   const [passKey, setPassKey] = useState('');
   const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
-  const [sales, setSales] = useState<Sale[]>([]);
+  const [sales, setSales] = useState([]);
   const [telephoneOptions, setTelephoneOptions] = useState<string[]>([]);
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
@@ -106,6 +101,7 @@ export default function Inventory() {
   };
 
   const handleSaveSale = async (data: any) => {
+    console.log(data)
     try {
       const response = await fetch("/api/sales", {
         method: "POST",
@@ -115,7 +111,7 @@ export default function Inventory() {
         body: JSON.stringify(data),
       });
       const newSaleData = await response.json();
-      setSales([...sales, newSaleData.data]);
+      // setSales([...sales, newSaleData.data]);
       return true;
     } catch (error) {
       console.error("Failed to add new sale:", error);
@@ -172,11 +168,9 @@ export default function Inventory() {
         <SalesForm onSave={handleSaveSale} products={products} telephoneOptions={telephoneOptions}/>
         <div className="sales-list">
           {sales.map((sale) => (
-            <div key={sale._id} className="sale-item">
-              <p>Telephone: {sale.telephone}</p>
-              <p>Products: {sale.products.join(', ')}</p>
-              <p>Date: {new Date(sale.timestamp).toLocaleString()}</p>
-            </div>
+            <div className="sales-wrapper">
+              <SaleComponent sale={sale} onSaleConfirmed={() => console.log("sale confirmed")}/>
+           </div>
           ))}
         </div>
       </Accordion>

@@ -11,8 +11,8 @@ const frontEndTypeMap = {
   'sativa': 'SAT',
   'indica': 'IND',
   'hybrid': 'HYB',
-  'indicadominant': 'IND HYB',
-  'sativadominant': 'SAT HYB'
+  'indicadominant': 'HYB/I',
+  'sativadominant': 'HYB/S'
 }
 
 const priceDisplay = (priceValue: Price | Price[] | undefined): string => {

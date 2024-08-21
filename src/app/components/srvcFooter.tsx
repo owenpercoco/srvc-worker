@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
-import { Order } from "@/data/inventory";
+import { Price } from "@/data/inventory";
 
 // Utility function to URL-encode text
 function urlEncodeText(text: string) {
   return encodeURIComponent(text);
 }
 
-const SrvcFooter = ({ order }: { order: Order }) => {
+const SrvcFooter = ({ order }: { order: Price[] }) => {
   const [smsHref, setSmsHref] = useState("sms:3478226610");
   const phoneNumber = "3478226610";
 
   useEffect(() => {
     // Generate the SMS text from the order's prices
-    let smsText = order.orders
+    let smsText = order
       .map(price => `${price.name || ''} - ${price.description}: $${price.amount}`)
       .join('\n');
     
     // Add the total amount at the end of the message
-    const totalAmount = order.orders.reduce((total, price) => total + price.amount, 0);
+    const totalAmount = order.reduce((total, price) => total + price.amount, 0);
     smsText += `\nTotal: $${totalAmount}`;
 
     // URL-encode the SMS text

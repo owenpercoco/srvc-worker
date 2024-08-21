@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BaseProduct, Order, Price } from "@/data/inventory";
+import { BaseProduct, Price } from "@/data/inventory";
 import { Dispatch, SetStateAction } from "react";
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
 interface OrderComponentProps {
   product: BaseProduct;
-  order: Order;
-  setOrder: Dispatch<SetStateAction<Order>>;
+  order: Price[];
+  setOrder: Dispatch<SetStateAction<Price[]>>;
 }
 
 const OrderComponent: React.FC<OrderComponentProps> = ({ product, order, setOrder }) => {
@@ -32,7 +32,7 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ product, order, setOrde
       setOrder((prevOrder) => ({
         ...prevOrder,
         orders: [
-          ...prevOrder.orders,
+          ...prevOrder,
           {
             amount: selectedPrice.amount,
             quantity: selectedPrice.quantity,

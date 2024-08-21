@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { returnData, BaseProduct, Order, Price, mockData } from '@/data/inventory';
+import { returnData, BaseProduct, Price, mockData } from '@/data/inventory';
 import { SrvcFooter, Logo, Modal, TelegramLink, Area, Container, OrderComponent } from './components/';
 import Image from 'next/image';
 
@@ -29,11 +29,15 @@ export default function Home() {
     },
   ];
 
-  const [order, setOrder] = useState<Order>({
-    orders: defaultPrices,
-  });
+  const [order, setOrder] = useState(defaultPrices);
 
-
+  const frontEndTypeMap = {
+    'sativa': 'SATIVA',
+    'indica': 'INDICA',
+    'hybrid': 'HYBRID',
+    'indicadominant': 'HYBRID INDICA',
+    'sativadominant': 'HYBRID SATIVA'
+  }
   const priceDisplay = (priceValue: Price | Price[] | undefined): string => {
     if (priceValue === undefined) return '' 
     let displayString = ''
@@ -149,7 +153,7 @@ export default function Home() {
                 <span><h2>{product?.name}</h2></span>
                 {/* <OrderComponent product={product} order={order} setOrder={setOrder}/> */}
               </div>
-                {product.type && <span className="modal-text">{product?.type}</span>}
+                {product.type && <span className="modal-text">{frontEndTypeMap[product?.type]}</span>}
                 <hr/>
             </div>
             <div className='row detail-row'>

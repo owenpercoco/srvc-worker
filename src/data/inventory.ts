@@ -20,7 +20,7 @@ export interface BaseProduct {
   description?: string;
   subtitle?: string;
   type?: TypeEnum;
-  price?: Price | Price[];
+  price: Price | Price[];
   amount?: string; // deprecated field
   quantity: number;
   category: categoryEnum;
@@ -32,7 +32,9 @@ export interface DataBaseProduct extends BaseProduct {
   id: number;
 }
 
-export interface Order {
+export interface Sale {
+  telephone?: string;
+  address?: string;
   orders: Price[];
 }
 
