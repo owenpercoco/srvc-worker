@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ISale } from '@/models/sale'
+import { ISale } from '@/models/Sale'
 import { Button, Card, Chip, CardContent, TextField } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 interface SaleCardProps {
@@ -61,12 +61,12 @@ const SaleComponent = ({ sale, onSaleConfirmed }: SaleCardProps) => {
         <div>
           <Grid container spacing={1} rowSpacing={2}>
             {sale.orders!.map((order, index) => (
-              <Grid xs={12} sm={6}>
+              <Grid xs={12} sm={6} key={index}>
                <Chip
                     label={`${order.name} - ${order.quantity} - $${order.amount}`}
-                    key={index}
+                    
                   />
-                  </Grid>
+              </Grid>
               ))}
           </Grid>
           <span>{sale.description}</span>
