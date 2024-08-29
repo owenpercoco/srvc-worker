@@ -27,6 +27,9 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
   description: {
     type: String,
   },
+  long_description: {
+    type: String,
+  },
   subtitle: {
     type: String,
   },

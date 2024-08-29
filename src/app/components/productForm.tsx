@@ -22,6 +22,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
       name: product.name,
       subtitle: product.subtitle || '',
       description: product.description || '',
+      long_description: product.long_description || '',
       price: product.price || [],
       category: product.category || '',
       type: product.type || '',
@@ -60,7 +61,8 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
   const onSubmit = async (data: any) => {
     const imageUrl = watch('image');
     const category = watch('category');
-    const success = await onSave({ ...data, image: imageUrl, category });
+    const long_description = watch('long_description');
+    const success = await onSave({ ...data, image: imageUrl, category, long_description });
     setIsSaved(success);
     setTimeout(() => setIsSaved(null), 2000);
   };
@@ -69,12 +71,12 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
     <Accordion title={watch('name') || 'Product Form'} expanded={expanded}>
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="field-container">
-          <label>Name</label>
           <TextField
             {...register('name')}
-            placeholder="Name"
-            fullWidth
+            label="name"
+            variant="outlined"
             size="small"
+            fullWidth
             onChange={(e) => {
               setValue('name', e.target.value);
               onInputChange('name', e.target.value);
@@ -82,11 +84,11 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           />
         </div>
         <div className="field-container">
-          <label>Subtitle</label>
           <TextField
             {...register('subtitle')}
-            placeholder="Subtitle"
             fullWidth
+            label="subtitle"
+            variant="outlined"
             size="small"
             onChange={(e) => {
               setValue('subtitle', e.target.value);
@@ -95,25 +97,41 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           />
         </div>
         <div className="field-container description">
-          <label>Description</label>
           <TextField
             {...register('description')}
             value={watch('description')}
-            placeholder="Description"
+            label="description"
+            variant="outlined"
+            size="small"
             fullWidth
-            multiline
-            rows={2}
             onChange={(e) => {
               setValue('description', e.target.value);
               onInputChange('description', e.target.value);
             }}
           />
         </div>
+        <div className="field-container description">
+          <TextField
+            {...register('long_description')}
+            value={watch('long_description')}
+            label="long description"
+            multiline
+            rows={2}
+            variant="outlined"
+            size="small"
+            fullWidth
+            onChange={(e) => {
+              setValue('long_description', e.target.value);
+              onInputChange('long_description', e.target.value);
+            }}
+          />
+        </div>
         <div className="field-container">
-          <label>Type</label>
+        <label>Indica/Sativa/Hybrid</label>
           <Select
             {...register('type')}
             value={watch('type')}
+            size="small"
             fullWidth
             onChange={(e: SelectChangeEvent<string>) => {
               setValue('type', e.target.value);

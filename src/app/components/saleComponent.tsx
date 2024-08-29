@@ -1,19 +1,9 @@
-import React from 'react';
-import { Button, Card, CardHeader, CardContent } from '@mui/material';
+import React, { useState } from 'react';
+import { ISale } from '@/models/sale'
+import { Button, Card, Chip, CardContent, TextField } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 interface SaleCardProps {
-  sale: {
-    _id: string;
-    telephone: string;
-    total: number;
-    description?: string;
-    orders: Array<{
-        amount: number;
-        quantity: string;
-        description?: string;
-        name: string;
-    }>;
-    confirmed: boolean;
-  };
+  sale: Partial<ISale>;
   onSaleConfirmed: () => void; // Callback to refresh the sales list after confirmation
 }
 
@@ -29,7 +19,7 @@ const SaleComponent = ({ sale, onSaleConfirmed }: SaleCardProps) => {
       });
 
       if (response.ok) {
-        onSaleConfirmed(); // Trigger a callback to refresh the sales list
+        onSaleConfirmed();
       } else {
         console.error('Failed to confirm sale:', await response.text());
       }
@@ -39,12 +29,27 @@ const SaleComponent = ({ sale, onSaleConfirmed }: SaleCardProps) => {
   };
 
   return (
-    <Card key={sale._id} variant="outlined">
+    <Card variant="outlined"  sx={{ borderRadius: '35px', p: 1, m: 1 }}>
       <div className='column'>
         <CardContent>
             <div className="row">
-                <h5>Telephone: {sale.telephone}</h5>
-                <h5>Total: {sale.total}</h5>
+              <Grid container spacing={1} sx={{m:1}}>
+                <Grid xs={12} sx={{my:1}}>
+                  <TextField label="telephone" value={sale.telephone} variant="outlined" size="small"/>
+                </Grid>
+                <Grid xs={12}>
+                  <Grid container spacing={1}>
+                    <Grid xs={6}>
+                      <TextField label="total" value={sale.total} variant="outlined" size="small"/>
+                    </Grid>
+                    <Grid xs={6}>
+                      <TextField label="amount paid" value={sale.amount_paid} variant="outlined" size="small"/>
+                    </Grid>
+                  </Grid>
+                  
+                </Grid>
+              </Grid>
+                <Button variant="outlined" sx={{my:1, height: 3/4}} onClick={confirmSale}>Edit</Button>
             </div>
             
         <div className='row'>
@@ -54,14 +59,16 @@ const SaleComponent = ({ sale, onSaleConfirmed }: SaleCardProps) => {
         </div>
        
         <div>
-          {sale.orders.map((order, index) => (
-            <div key={index}>
-                <p>
-                  {`${order.quantity}x ${order.name} - $${order.amount}`}
-                </p>
-            </div>
-            
-          ))}
+          <Grid container spacing={1} rowSpacing={2}>
+            {sale.orders!.map((order, index) => (
+              <Grid xs={12} sm={6}>
+               <Chip
+                    label={`${order.name} - ${order.quantity} - $${order.amount}`}
+                    key={index}
+                  />
+                  </Grid>
+              ))}
+          </Grid>
           <span>{sale.description}</span>
         </div>
         </CardContent>

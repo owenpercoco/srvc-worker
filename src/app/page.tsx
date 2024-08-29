@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { returnData, BaseProduct, Price, mockData } from '@/data/inventory';
-import { SrvcFooter, Logo, Modal, TelegramLink, Area, Container, OrderComponent } from './components/';
+import { Typography } from '@mui/material';
+import { SrvcFooter, Logo, Modal, TelegramLink, Area, } from './components/';
 import Image from 'next/image';
 
 export default function Home() {
@@ -175,6 +176,9 @@ export default function Home() {
                   <span></span>
                 )}
               </div>
+            <div className='long-description'>
+              <Typography>{product.long_description}</Typography>
+            </div>
           </div>
           )}
     </Modal>

@@ -23,10 +23,11 @@ const handleGetRequest = async (id: string | string[], res: NextApiResponse<Data
 
 // Handle PUT request
 const handlePutRequest = async (id: string | string[], req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { name, description, subtitle, type, price, amount, quantity, category, image } = req.body;
+  const { name, description, long_description, subtitle, type, price, amount, quantity, category, image } = req.body;
 
   try {
-    const updateData: any = { name, description, subtitle, type, price, amount, quantity, category, image };
+    const updateData: any = { name, description, long_description, subtitle, type, price, amount, quantity, category, image };
+    console.log('update data', updateData)
     const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
 
     if (!updatedProduct) {

@@ -18,6 +18,7 @@ export enum TypeEnum {
 export interface BaseProduct {
   name: string; 
   description?: string;
+  long_description?: string;
   subtitle?: string;
   type?: TypeEnum;
   price: Price | Price[];
@@ -36,6 +37,10 @@ export interface Sale {
   telephone?: string;
   address?: string;
   orders: Price[];
+  total?: number;
+  amount_paid?: number;
+  description?: string;
+
 }
 
 export interface Price {

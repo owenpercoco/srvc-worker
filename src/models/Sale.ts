@@ -10,7 +10,7 @@ interface IPrice {
 }
 
 // Define the interface for the Sale model
-interface ISale extends Document {
+export interface ISale extends Document {
   id: string;
   uuid: string;
   telephone: string;

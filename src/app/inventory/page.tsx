@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from "react";
 import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
+import { ISale } from '@/models/Sale'
 import { Accordion, Logo, Modal, ProductForm, ProductList, SalesForm, SaleComponent } from "../components";
 import { TextField } from "@mui/material";
 
@@ -17,7 +18,7 @@ export default function Inventory() {
   const [passKey, setPassKey] = useState('');
   const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
-  const [sales, setSales] = useState([]);
+  const [sales, setSales] = useState<ISale[]>([]);
   const [telephoneOptions, setTelephoneOptions] = useState<string[]>([]);
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
@@ -72,6 +73,7 @@ export default function Inventory() {
   };
 
   const handleSaveNewProduct = async (data: any) => {
+    console.log(data)
     try {
       const response = await fetch("/api/products", {
         method: "POST",
@@ -143,7 +145,7 @@ export default function Inventory() {
 
   return (
     <div className="inventory-container">
-      <Accordion title="Current Products" expanded={true}>
+      <Accordion title="Current Products" expanded={false}>
         <ProductList products={products} setProducts={setProducts} />
       </Accordion>
 
@@ -168,7 +170,7 @@ export default function Inventory() {
         <SalesForm onSave={handleSaveSale} products={products} telephoneOptions={telephoneOptions}/>
         <div className="sales-list">
           {sales.map((sale) => (
-            <div className="sales-wrapper">
+            <div className="sales-wrapper" key={sale.uuid}>
               <SaleComponent sale={sale} onSaleConfirmed={() => console.log("sale confirmed")}/>
            </div>
           ))}
