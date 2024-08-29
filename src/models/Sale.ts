@@ -16,7 +16,8 @@ export interface ISale extends Document {
   telephone: string;
   address?: string;
   orders: IPrice[];
-  total: number;
+  total?: number;
+  amount_paid?: number;
   timestamp: Date;
   confirmed: boolean;
   description?: string;
@@ -75,7 +76,11 @@ const SaleSchema: Schema<ISale> = new Schema<ISale>({
   },
   total: {
     type: Number,
-    required: true,
+    required: false,
+  },
+  amount_paid: {
+    type: Number,
+    required: false,
   },
   timestamp: {
     type: Date,

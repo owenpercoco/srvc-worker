@@ -43,7 +43,7 @@ const SaleComponent = ({ sale, onSaleConfirmed }: SaleCardProps) => {
                       <TextField label="total" value={sale.total} variant="outlined" size="small"/>
                     </Grid>
                     <Grid xs={6}>
-                      <TextField label="amount paid" value={sale.amount_paid} variant="outlined" size="small"/>
+                      <TextField label="amount paid" value={sale.amount_paid || sale.total} variant="outlined" size="small"/>
                     </Grid>
                   </Grid>
                   
