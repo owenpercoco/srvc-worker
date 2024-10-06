@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { returnData, BaseProduct, Price, mockData } from '@/data/inventory';
 import { Typography } from '@mui/material';
-import { SrvcFooter, Logo, Modal, TelegramLink, Area, } from './components/';
+import { SrvcFooter, Logo, Modal, TelegramLink, Area, PhoneLink } from './components/';
 import Image from 'next/image';
 
 export default function Home() {
@@ -133,8 +133,11 @@ export default function Home() {
               product={data.concentrates}
               setProduct={setProduct} 
               setShowModal={setShowModal}
-            />
+            />  
+            <PhoneLink />
             <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
+         
+
             <div className="delivery-info-container info-container column">
               <span>delivery minimums are:</span>
               <span>Manhattan: $50</span>

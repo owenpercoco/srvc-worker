@@ -30,6 +30,14 @@ body, html {
   justify-content: center;
 }
 
+.text {
+  font-size: $font-size;
+  padding-bottom: 3px;
+  &--plus {
+    font-size: $font-size * 1.5;
+    font-weight: bold;
+  }
+}
 
 
 .row {
@@ -37,6 +45,7 @@ body, html {
   flex-direction: row;
   gap: $gap-size;
 }
+
 .column {
   display: flex;
   flex-direction: column;
@@ -124,6 +133,9 @@ body, html {
   }
 }
 
+.p-l-4 {
+  padding-left: 4px;
+}
 .m-t-8 {
   margin-top: 8px !important;
 }
@@ -173,7 +185,6 @@ body, html {
 .info-container {
   width: 100%;
   text-align: center;
-  font-size: 8px;
   text-transform: lowercase;
   font-size: $font-size*1.25;
   font-weight: 500;
@@ -205,13 +216,11 @@ body, html {
     justify-content: center;
     .telegram-text {
       font-size: $font-size;
-      padding-top: 2px;
-      padding-bottom: 4px;
+      padding-bottom: 3px;
       text-transform: capitalize;
     } 
     svg {
-      height: 80px;
-      width: 80px;
+      height: 40px;
       padding-bottom: 16px;
     }
   }
