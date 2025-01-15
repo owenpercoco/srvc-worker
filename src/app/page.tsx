@@ -140,7 +140,7 @@ export default function Home() {
 
             <div className="delivery-info-container info-container column">
               <span>delivery minimums are:</span>
-              <span>Manhattan: $50</span>
+              <span>Manhattan: $100</span>
               <span>Upper Manhattan: $100</span>
               <span>Brooklyn & Queens: $100</span>
             </div>
