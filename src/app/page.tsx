@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 export default function Home() {
   const [data, setData] = useState<returnData>()
+  const [settings, setSettings] = useState<any>({});
   const [showModal, setShowModal] = useState<boolean>(false);
   const [product, setProduct] = useState<BaseProduct | undefined>()
   const defaultPrices: Price[] = [
@@ -54,6 +55,10 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/api/inventory');
+      const settings = await fetch('api/settings');
+      const settingsResult = await settings.json()
+      console.log(settingsResult)
+      setSettings(settingsResult.data);
       const result = await response.json()
       console.log(result)
       setData(result.data);
@@ -134,15 +139,25 @@ export default function Home() {
               setProduct={setProduct} 
               setShowModal={setShowModal}
             />  
-            <PhoneLink />
-            <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
+            { settings.isPhoneNumberVisisble && (
+              <PhoneLink/>
+            )}
+            { settings.isTelegramLinkVisible && (
+              <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
+            )}
          
 
             <div className="delivery-info-container info-container column">
-              <span>delivery minimums are:</span>
-              <span>Manhattan: $100</span>
-              <span>Upper Manhattan: $100</span>
-              <span>Brooklyn & Queens: $100</span>
+              <p>Delivery minimums are:</p>
+              {settings.minimums && settings.minimums.length > 0 ? (
+                settings.minimums.map((minimum: any) => (
+                  <span key={minimum.name}>
+                    {minimum.name}: ${minimum.value}
+                  </span>
+                ))
+              ) : (
+                <span>Loading delivery minimums...</span>
+              )}
             </div>
           </div>
         </div>

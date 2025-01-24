@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from "react";
 import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
-import { ISale } from '@/models/Sale'
-import { Accordion, Logo, Modal, ProductForm, ProductList, SalesForm, SaleComponent } from "../components";
+import { Accordion, Logo, Modal, ProductForm, ProductList } from "../components";
 import { TextField } from "@mui/material";
 
 
@@ -18,8 +17,6 @@ export default function Inventory() {
   const [passKey, setPassKey] = useState('');
   const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
-  const [sales, setSales] = useState<ISale[]>([]);
-  const [telephoneOptions, setTelephoneOptions] = useState<string[]>([]);
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
     description: "",
@@ -40,16 +37,7 @@ export default function Inventory() {
       setIsLoading(false);
     }
 
-    async function fetchSales() {
-      const response = await fetch("/api/sales");
-      const data = await response.json();
-      setSales(data.sales);
-      const uniqueTelephones: string[] = Array.from(new Set(data.sales.map((sale: any) => sale.telephone)));
-      setTelephoneOptions(uniqueTelephones);
-    }
-
     fetchProducts();
-    fetchSales();
   }, []);
 
   const handlePassKey = async () => {
@@ -102,24 +90,6 @@ export default function Inventory() {
     }
   };
 
-  const handleSaveSale = async (data: any) => {
-    console.log(data)
-    try {
-      const response = await fetch("/api/sales", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const newSaleData = await response.json();
-      // setSales([...sales, newSaleData.data]);
-      return true;
-    } catch (error) {
-      console.error("Failed to add new sale:", error);
-      return false;
-    }
-  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -165,17 +135,6 @@ export default function Inventory() {
           expanded
         />
       </Modal>
-
-      <Accordion title="Sales" expanded={false}>
-        <SalesForm onSave={handleSaveSale} products={products} telephoneOptions={telephoneOptions}/>
-        <div className="sales-list">
-          {sales.map((sale) => (
-            <div className="sales-wrapper" key={sale.uuid}>
-              <SaleComponent sale={sale} onSaleConfirmed={() => console.log("sale confirmed")}/>
-           </div>
-          ))}
-        </div>
-      </Accordion>
     </div>
   );
 }
