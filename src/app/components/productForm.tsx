@@ -68,7 +68,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
   };
 
   return (
-    <Accordion title={watch('name') || 'Product Form'} expanded={expanded}>
+    <Accordion title={watch('name') || 'Product Form'} expanded={expanded} contained={true}>
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="field-container">
           <TextField

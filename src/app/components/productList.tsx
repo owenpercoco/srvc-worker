@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
-import { ProductForm } from "../components";
-
+import { ProductForm, Accordion } from "../components";
+import { useMemo } from 'react';
 
 interface ProductListProps {
     products: DataBaseProduct[]
@@ -11,6 +11,21 @@ interface ProductListProps {
 
 
 export default function ProductList({ products, setProducts }: ProductListProps) {
+  const groupedProducts = useMemo(() => {
+    return products.reduce((acc: any, product: any) => {
+      if (!acc[product.category]) {
+        acc[product.category] = [];
+      }
+      acc[product.category].push(product);
+      return acc;
+    }, {});
+  }, [products]);
+
+  useEffect(() => {
+    console.log("Grouped Products:", groupedProducts);
+  }, [groupedProducts]);
+
+  let currentCategory = '';
     const handleInputChange = (index: number, field: string, value: any) => {
         const newProducts = [...products];
         newProducts[index] = { ...newProducts[index], [field]: value };
@@ -70,14 +85,18 @@ export default function ProductList({ products, setProducts }: ProductListProps)
     return (
     <div className="inventory-container">
       <h2>Inventory</h2>
-      {products.map((product, index) => (
-        <ProductForm
-          key={product._id || index}
-          product={product}
-          onInputChange={(field, value) => handleInputChange(index, field, value)}
-          onSave={(data) => handleSaveProduct(index, data)}
-          onDelete={() => handleDeleteProduct(index)}
-        />
+      {Object.entries(groupedProducts).map(([category, products] : [any, any]) => (
+        <Accordion key={category} title={category} expanded={true}>
+          {products.map((product: BaseProduct, index: number) => (
+            <ProductForm
+              key={index}
+              product={product}
+              onInputChange={(field, value) => handleInputChange(index, field, value)}
+              onSave={(data) => handleSaveProduct(index, data)}
+              onDelete={() => handleDeleteProduct(index)}
+            />
+          ))}
+        </Accordion>
       ))}
     </div>
   );

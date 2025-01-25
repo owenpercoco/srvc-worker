@@ -3,10 +3,11 @@ import React, { ReactNode, useState } from 'react';
 interface AccordionProps {
   title: string;
   expanded?: boolean;
+  contained?: boolean;
   children: ReactNode;
 }
 
-const Accordion = ({ title, expanded = false, children }: AccordionProps) => {
+const Accordion = ({ title, expanded = false, contained=false, children }: AccordionProps) => {
   const [isExpanded, setIsExpanded] = useState(expanded);
 
   const toggleAccordion = () => {
@@ -14,7 +15,7 @@ const Accordion = ({ title, expanded = false, children }: AccordionProps) => {
   };
 
   return (
-    <div>
+    <div className={contained ? 'accordion-contained' : ' '}>
       <div className="accordion-header" onClick={toggleAccordion}>
         <h2>{title}</h2>
         <span className="expand-arrow">{isExpanded ? '▲' : '▼'}</span>

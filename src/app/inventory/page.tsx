@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from "react";
 import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
-import { Accordion, Logo, Modal, ProductForm, ProductList } from "../components";
+import { Accordion, Logo, Modal, ProductForm, ProductList, SettingsForm } from "../components";
 import { TextField } from "@mui/material";
 
 
@@ -17,6 +17,7 @@ export default function Inventory() {
   const [passKey, setPassKey] = useState('');
   const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
+  const [settings, setSettings] = useState<any>({});
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
     description: "",
@@ -35,6 +36,10 @@ export default function Inventory() {
       const data = await response.json();
       setProducts(data.data);
       setIsLoading(false);
+      const settings = await fetch('api/settings');
+      const settingsResult = await settings.json()
+      console.log(settingsResult)
+      setSettings(settingsResult.data);
     }
 
     fetchProducts();
@@ -114,27 +119,32 @@ export default function Inventory() {
   );
 
   return (
-    <div className="inventory-container">
-      <Accordion title="Current Products" expanded={false}>
-        <ProductList products={products} setProducts={setProducts} />
-      </Accordion>
+    <div className="inventory-wrapper">
+      <div className="settings-container">
+        <SettingsForm initialData={settings} onSubmit={console.log} />
+      </div>
+      <div className="inventory-container">
+        <Accordion title="Current Products" expanded={true}>
+          <ProductList products={products} setProducts={setProducts} />
+        </Accordion>
 
-      <button
-        className="add-product-button"
-        onClick={() => setIsModalOpen(true)}
-      >
-        +
-      </button>
+        <button
+          className="add-product-button"
+          onClick={() => setIsModalOpen(true)}
+        >
+          +
+        </button>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Add New Product</h2>
-        <ProductForm
-          product={newProduct}
-          onInputChange={handleNewProductChange}
-          onSave={(data: any) => handleSaveNewProduct(data)}
-          expanded
-        />
-      </Modal>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <h2>Add New Product</h2>
+          <ProductForm
+            product={newProduct}
+            onInputChange={handleNewProductChange}
+            onSave={(data: any) => handleSaveNewProduct(data)}
+            expanded
+          />
+        </Modal>
+      </div>
     </div>
   );
 }
