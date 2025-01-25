@@ -1,33 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DeliveryMinimum {
   name: string;
   value: number;
 }
 
-interface PageSettingsFormProps {
-  initialData?: {
-    isTelegramLinkVisible: boolean;
-    isPhoneNumberVisisble: boolean;
-    minimums: DeliveryMinimum[];
-  };
-  onSubmit: (data: {
-    isTelegramLinkVisible: boolean;
-    isPhoneNumberVisisble: boolean;
-    minimums: DeliveryMinimum[];
-  }) => void;
-}
+export default function PageSettingsForm() {
+  const [isTelegramLinkVisible, setIsTelegramLinkVisible] = useState(false);
+  const [isPhoneNumberVisisble, setIsPhoneNumberVisisble] = useState(false);
+  const [minimums, setMinimums] = useState<DeliveryMinimum[]>([]);
 
-export default function PageSettingsForm({ initialData, onSubmit }: PageSettingsFormProps) {
-  const [telegramLink, setTelegramLink] = useState(initialData?.isTelegramLinkVisible || false);
-  const [phoneNumber, setPhoneNumber] = useState(initialData?.isPhoneNumberVisisble || false);
-  const [minimums, setMinimums] = useState<DeliveryMinimum[]>(
-    initialData?.minimums || [{ name: "", value: 0 }]
-  );
+  useEffect(() => {
+    async function fetchSettings() {
+      const settings = await fetch('api/settings');
+      const settingsResult = await settings.json()
+      console.log(settingsResult)
+      setIsTelegramLinkVisible(settingsResult.data.isTelegramLinkVisible);
+      setIsPhoneNumberVisisble(settingsResult.data.isPhoneNumberVisisble);
+      setMinimums(settingsResult.data.minimums);
+    }
 
-  const handleMinimumChange = (index: number, field: keyof DeliveryMinimum, value: string | number) => {
-    const updatedMinimums = [...minimums];
-    updatedMinimums[index][field] = value as never;
+    fetchSettings();
+  }, []);
+
+  const handleMinimumChange = (index: number, field: string, value: string | number) => {
+    const updatedMinimums: any[] = [...minimums];
+    updatedMinimums[index][field as keyof DeliveryMinimum] = value;
     setMinimums(updatedMinimums);
   };
 
@@ -40,9 +38,33 @@ export default function PageSettingsForm({ initialData, onSubmit }: PageSettings
     setMinimums(updatedMinimums);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ telegramLink, phoneNumber, minimums });
+
+    const payload = {
+      isTelegramLinkVisible,
+      isPhoneNumberVisisble,
+      minimums,
+    };
+    console.log(payload)
+    try {
+      const response = await fetch("/api/settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        console.log("Settings saved successfully");
+      } else {
+        const error = await response.json();
+        console.error("Error saving settings:", error);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
   };
 
   return (
@@ -51,10 +73,10 @@ export default function PageSettingsForm({ initialData, onSubmit }: PageSettings
         <label>
           <input
             type="checkbox"
-            checked={telegramLink}
-            onChange={(e) => setTelegramLink(e.target.checked)}
+            checked={isTelegramLinkVisible}
+            onChange={(e) => setIsTelegramLinkVisible(e.target.checked)}
           />
-          Telegram Link
+          Display Telegram Section
         </label>
       </div>
 
@@ -62,10 +84,10 @@ export default function PageSettingsForm({ initialData, onSubmit }: PageSettings
         <label>
           <input
             type="checkbox"
-            checked={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.checked)}
+            checked={isPhoneNumberVisisble}
+            onChange={(e) => setIsPhoneNumberVisisble(e.target.checked)}
           />
-          Phone Number
+          Display Phone Number
         </label>
       </div>
 

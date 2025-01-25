@@ -17,7 +17,6 @@ export default function Inventory() {
   const [passKey, setPassKey] = useState('');
   const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
-  const [settings, setSettings] = useState<any>({});
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
     description: "",
@@ -36,10 +35,6 @@ export default function Inventory() {
       const data = await response.json();
       setProducts(data.data);
       setIsLoading(false);
-      const settings = await fetch('api/settings');
-      const settingsResult = await settings.json()
-      console.log(settingsResult)
-      setSettings(settingsResult.data);
     }
 
     fetchProducts();
@@ -121,7 +116,7 @@ export default function Inventory() {
   return (
     <div className="inventory-wrapper">
       <div className="settings-container">
-        <SettingsForm initialData={settings} onSubmit={console.log} />
+        <SettingsForm  />
       </div>
       <div className="inventory-container">
         <Accordion title="Current Products" expanded={true}>

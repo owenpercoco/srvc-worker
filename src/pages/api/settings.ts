@@ -10,12 +10,12 @@ type Data = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   await connect();
-  console.log("hey do we get hur");
+
   switch (req.method) {
     case 'GET':
       try {
         const settings = await PageSettings.findOne({});
-        console.log("settings: ", settings);
+        
         if (!settings) {
           res.status(404).json({ success: false, error: 'Settings not found' });
           return;
@@ -28,12 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     case 'POST':
       try {
-        const { telegramLink, phoneNumber, minimums } = req.body;
-
+        const { isTelegramLinkVisible, isPhoneNumberVisisble, minimums } = req.body;
+        console.log("settings: ", { isTelegramLinkVisible, isPhoneNumberVisisble, minimums });
         // Validation
         if (
-          telegramLink === undefined ||
-          phoneNumber === undefined
+          isTelegramLinkVisible === undefined ||
+          isPhoneNumberVisisble === undefined
         ) {
           res.status(400).json({ success: false, error: 'Missing required fields' });
           return;
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
         const updatedSettings = await PageSettings.findOneAndUpdate(
           {},
-          { telegramLink, phoneNumber, minimums },
+          { isTelegramLinkVisible, isPhoneNumberVisisble, minimums },
           { upsert: true, new: true }
         );
 

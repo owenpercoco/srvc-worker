@@ -6,8 +6,8 @@ interface DeliveryMinimum {
 }
 
 interface PageSettingsDocument extends Document {
-  telegramLink: boolean;
-  phoneNumber: boolean;
+  isTelegramLinkVisible: boolean;
+  isPhoneNumberVisisble: boolean;
   minimums: DeliveryMinimum[];
 }
 
@@ -17,8 +17,8 @@ const DeliveryMinimumSchema = new Schema<DeliveryMinimum>({
 });
 
 const PageSettingsSchema = new Schema<PageSettingsDocument>({
-  telegramLink: { type: Boolean, required: true },
-  phoneNumber: { type: Boolean, required: true },
+  isTelegramLinkVisible: { type: Boolean, required: true },
+  isPhoneNumberVisisble: { type: Boolean, required: true },
   minimums: { type: [DeliveryMinimumSchema], required: true },
 });
 
