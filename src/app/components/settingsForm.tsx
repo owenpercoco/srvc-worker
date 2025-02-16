@@ -106,7 +106,7 @@ export default function PageSettingsForm() {
         <div className="mb-4">
           <h3 className="mt-4">Delivery Minimums</h3>
           {minimums.map((minimum, index) => (
-            <Grid container className="mb-4">
+            <Grid container className="mb-4" key={index}>
               <Grid item xs={10}>
                 <Grid container>
                   <Grid item xs={2}>
