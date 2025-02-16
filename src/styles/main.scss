@@ -5,6 +5,9 @@ $font-size: 9px;
 $gap-size: 8px;
 $max-width: 412px;
 
+@import "tailwindcss";
+
+
 body, html {
   height: 100%;
   margin: 0;
@@ -299,6 +302,20 @@ body, html {
 }
 
 
+.open-settings-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1000;
+}
 
 .add-product-button {
   position: fixed;
@@ -344,3 +361,19 @@ body, html {
 .inventory-wrapper {
   padding: 18px;
 }
+
+.settings-bar {
+  width: 100%;
+  transition: height 0.3s ease-in-out;
+  overflow: hidden;
+  height: 0; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  
+  &.expanded {
+      height: auto; 
+    }
+  }
+  

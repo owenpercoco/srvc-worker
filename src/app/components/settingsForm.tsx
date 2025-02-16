@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { TextField, InputAdornment, Grid, Button, IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface DeliveryMinimum {
   name: string;
@@ -8,6 +10,7 @@ interface DeliveryMinimum {
 export default function PageSettingsForm() {
   const [isTelegramLinkVisible, setIsTelegramLinkVisible] = useState(false);
   const [isPhoneNumberVisisble, setIsPhoneNumberVisisble] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [minimums, setMinimums] = useState<DeliveryMinimum[]>([]);
 
   useEffect(() => {
@@ -68,58 +71,95 @@ export default function PageSettingsForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={isTelegramLinkVisible}
-            onChange={(e) => setIsTelegramLinkVisible(e.target.checked)}
-          />
-          Display Telegram Section
-        </label>
-      </div>
+    <>
+    <button
+    className="open-settings-button"
+    onClick={() => setIsExpanded(!isExpanded)}
+  >
+    ⚙
+  </button>
+      <div className={`settings-bar ${isExpanded ? 'expanded' : ''}`}>
 
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={isPhoneNumberVisisble}
-            onChange={(e) => setIsPhoneNumberVisisble(e.target.checked)}
-          />
-          Display Phone Number
-        </label>
-      </div>
-
-      <div>
-        <h3>Delivery Minimums</h3>
-        {minimums.map((minimum, index) => (
-          <div key={index} style={{ marginBottom: "1rem" }}>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>
             <input
-              type="text"
-              placeholder="Name"
-              value={minimum.name}
-              onChange={(e) => handleMinimumChange(index, "name", e.target.value)}
-              style={{ marginRight: "1rem" }}
+              type="checkbox"
+              checked={isTelegramLinkVisible}
+              onChange={(e) => setIsTelegramLinkVisible(e.target.checked)}
             />
-            <input
-              type="number"
-              placeholder="Value"
-              value={minimum.value}
-              onChange={(e) => handleMinimumChange(index, "value", parseFloat(e.target.value))}
-              style={{ marginRight: "1rem" }}
-            />
-            <button type="button" onClick={() => removeMinimum(index)}>
-              Remove
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={addMinimum}>
-          Add Minimum
-        </button>
-      </div>
+            Display Telegram Section
+          </label>
+        </div>
 
-      <button type="submit">Save Settings</button>
-    </form>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={isPhoneNumberVisisble}
+              onChange={(e) => setIsPhoneNumberVisisble(e.target.checked)}
+            />
+            Display Phone Number
+          </label>
+        </div>
+
+        <div className="mb-4">
+          <h3 className="mt-4">Delivery Minimums</h3>
+          {minimums.map((minimum, index) => (
+            <Grid container className="mb-4">
+              <Grid item xs={10}>
+                <Grid container>
+                  <Grid item xs={2}>
+                  <div className="relative">
+                      <span className="text-sm text-zinc-800">Area</span>
+                    </div>
+                  </Grid>
+                  <Grid item xs={10} className="mb-1">
+                  <TextField
+                    type="text"
+                    value={minimum.name}
+                    onChange={(e) => handleMinimumChange(index, "name", e.target.value)}
+                    className="w-full text-sm"
+                    InputProps={{
+                    className: "text-center text-base h-7 text-sm bg-white border border-gray-300 rounded-md", // Centers text
+                    }}
+                  />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <div className="relative">
+                      <span className="text-sm text-zinc-800">Delivery Minimum</span>
+                    </div>
+                  </Grid>
+                  <Grid item xs={6} sm={6}>
+                  <TextField
+                    type="number"
+                    placeholder="Value"
+                    value={minimum.value}
+                    onChange={(e) => handleMinimumChange(index, "value", parseFloat(e.target.value))}
+                    className="w-20 text-sm"
+                    InputProps={{
+                    className: "text-center text-base h-7 text-sm bg-white border border-gray-300 rounded-md", // Centers text
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                  />
+                  </Grid>
+                </Grid>
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton aria-label="delete" onClick={() => removeMinimum(index)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+            </Grid>
+          ))}
+          <Button variant="outlined" size="small" type="button" onClick={addMinimum}>
+            Add Minimum
+          </Button>
+        </div>
+
+        <Button variant="contained" size="small" type="submit">Save Settings</Button>
+      </form>
+    </div>
+    </>
   );
 }

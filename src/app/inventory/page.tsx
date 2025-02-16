@@ -116,12 +116,13 @@ export default function Inventory() {
   return (
     <div className="inventory-wrapper">
       <div className="settings-container">
-        <SettingsForm  />
+        <SettingsForm />
       </div>
       <div className="inventory-container">
-        <Accordion title="Current Products" expanded={true}>
-          <ProductList products={products} setProducts={setProducts} />
-        </Accordion>
+      <h2 className="text-3xl font-bold text-center bg-gray-100 p-4 rounded-lg">
+        Current Products
+      </h2>
+        <ProductList products={products} setProducts={setProducts} />
 
         <button
           className="add-product-button"
