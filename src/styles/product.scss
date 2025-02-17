@@ -7,36 +7,6 @@ $gap-size: 8px;
 $max-width: 412px;
 
     .area-container {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: $gap-size * 2;
-        .area-header {
-          display: flex;
-          justify-content: space-between;
-          font-size: $font-size * 1.5;
-          font-weight: 900;
-          text-transform: uppercase;
-          padding: 0 $gap-size/4;
-          margin-bottom: $gap-size/2;
-          span {
-            font-size: $font-size;
-            font-weight: 900;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-          }
-          &.premium {
-            background-color: $black-color;
-            color: $background-color;
-            font-size: $font-size;
-            h2 {
-              font-size: $font-size;
-            }
-          }
-          + div {
-            padding-left: 2px;
-          }
-        }
         .product {
           display: flex;
           flex-direction: column;
@@ -56,27 +26,9 @@ $max-width: 412px;
             color: lighten($black-color, 30)
           }
           .product-row {
-            display: flex;
-            flex: 1 1 auto;
-            gap: $gap-size/2;
+
             justify-content: space-between;
             padding-bottom: $gap-size/2;
-      
-            .product-name, .product-price, .product-type, .product-amount {
-              font-size: $font-size;
-              text-transform: uppercase;
-              font-weight: 600;
-              flex-shrink: 0;
-                    }
-            .product-name {
-              margin-right: auto;
-              flex-shrink: 1;
-            }
-            .product-description {
-              font-size: $font-size * .75;
-              font-weight: 500;
-              text-transform: lowercase;
-            }
           }
         }
       }

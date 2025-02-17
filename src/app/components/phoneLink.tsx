@@ -1,11 +1,10 @@
 const PhoneLink = () => {
   return (
-    <a href={"sms:3478226610"} style={{ textDecoration: 'none', color: 'inherit' }} className='column'>
-        <div className='row text--plus p-l-4 between'>
+    <a href={"sms:3478226610"} style={{ textDecoration: 'none', color: 'inherit' }} className='flex flex-col'>
+        <div className='flex flex-row justify-between text-[12px] font-semibold pb-2'>
             <span>text to order:</span>
             <span>347.822.6610</span>
         </div>
-        <hr/>
     </a>   
   );
 }

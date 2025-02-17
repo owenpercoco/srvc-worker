@@ -86,7 +86,10 @@ export default function ProductList({ products, setProducts }: ProductListProps)
     <div className="inventory-container">
       <h2>Inventory</h2>
       {Object.entries(groupedProducts).map(([category, products] : [any, any]) => (
-        <Accordion key={category} title={category} expanded={true}>
+        <div key={category} title={category}>
+          <span className="text-lg font-semibold text-zinc-600 rounded-md">
+            {category}
+          </span>
           {products.map((product: BaseProduct, index: number) => (
             <ProductForm
               key={index}
@@ -96,7 +99,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
               onDelete={() => handleDeleteProduct(index)}
             />
           ))}
-        </Accordion>
+        </div>
       ))}
     </div>
   );

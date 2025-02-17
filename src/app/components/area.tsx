@@ -18,8 +18,8 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
             case 'sun grown': {
                 return (
                     <>
-                        <span><h2>sun grown</h2></span>
-                        <span className="header-text">1/4 • oz • type</span>
+                        <h2 className="text-[12px]!">sun grown</h2>
+                        <span className="text-[8px] font-black uppercase flex items-center">1/4 • oz • type</span>
                     </>
                 )
             }
@@ -27,14 +27,14 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
 
                 return (
                 <>
-                    <span><h2>premium</h2></span>
-                    <span className="header-text">1/8 • 1/4 • 1/2 • oz • type</span>
+                    <h2 className="text-[10px]! text-white">premium</h2>
+                    <span className="text-[8px] font-black uppercase flex items-center text-white">1/8 • 1/4 • 1/2 • oz • type</span>
                 </>)
             }
             default: {
             return (
                     <>
-                        <h2>{title}</h2>
+                        <h2 className="text-[12px]! uppercase">{title}</h2>
                     </>
                 )  
             }
@@ -42,9 +42,12 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
         }
 
     }
+  if (product.length == 0) {
+    return <></>
+  }
   return (
-    <div className="area-container">
-      <div className={`area-header ${premium ? 'premium' : ''}`}>
+    <div className="area-container flex flex-col pb-1">
+      <div className={`uppercase flex justify-between text-[8px] px-2 mb-1 area-header ${premium ? 'bg-black text-white' : 'text-black'}`}>
         {headerFromTitle(title)}
       </div>
       <div className="product-list">

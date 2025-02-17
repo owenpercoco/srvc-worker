@@ -104,7 +104,6 @@ export default function Home() {
             />
 
             {/* Render Psychedelic Products */}
-            <hr/>
             <Area
               title='psychedelics'
               product={data.psychedelics}
@@ -124,7 +123,6 @@ export default function Home() {
             />
 
             {/* Render Preroll Products */}
-            <hr/>
             <Area
               title='preroll'
               product={data.prerolls}

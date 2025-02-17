@@ -62,22 +62,22 @@ export function DisplayProduct({ product, setProduct, setShowModal }: FlowerProp
   return (
     <div
       key={product.name}
-      className={`product ${hover ? 'hover' : ''}`}
+      className={`product flex flex-col pt-[10px] px-[4px] pb-0 ${hover ? 'hover' : ''}`}
     >
       <div className="touch-response" onTouchStart={handleTouch}></div>
       <div className="hover-bg"></div>
-      <div className="product-row">
-        <span className="product-name">{product.name}</span>
-        <span className="product-price">
+      <div className="product-row flex flex-row justify-between">
+        <span className="text-[9px] uppercase font-semibold mr-auto shrink">{product.name}</span>
+        <span className="text-[9px] uppercase font-semibold shrink-0">
           {priceDisplay(product.price)}
         </span>
         {product.type && (
-          <span className="product-type">{frontEndTypeMap[product.type]}</span>
+          <span className="text-[9px] font-semibold pl-1">{frontEndTypeMap[product.type]}</span>
         )}
       </div>
       {showDescription && (
-        <div className="product-row">
-          <span className="product-description">{product.description}</span>
+        <div className="flex flex-1 gap-1 justify-between pb-2">
+          <span className="text-[10px] font-medium lowercase">{product.description}</span>
         </div>
       )}
     </div>

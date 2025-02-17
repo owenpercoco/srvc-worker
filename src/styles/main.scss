@@ -67,12 +67,12 @@ body, html {
   font-family: 'Helvetica';
   max-width: $max-width;
   .column-container {
-    gap: $gap-size;
-    padding: $gap-size;
+    gap: $gap-size/2;
+    padding: $gap-size/2;
     .middle-seperator {
       background-color: $black-color;
-      width: 2px;
-      margin: 3px;
+      width: 1px;
+      margin: 2px;
     }
     .left-column {
       padding-left: $gap-size/2;
