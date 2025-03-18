@@ -43,7 +43,16 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
 
     }
   if (product.length == 0) {
-    return <></>
+    return (
+      <div className="area-container flex flex-col pb-1">
+        <div className={`uppercase flex justify-between text-[8px] px-2 mb-1 area-header ${premium ? 'bg-black text-white' : 'text-black'}`}>
+          {headerFromTitle(title)}
+        </div>
+        <div className="p-4 rounded-lg text-center">
+          <span className="text-green-500 font-bold">SOLD OUT</span>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="area-container flex flex-col pb-1">
