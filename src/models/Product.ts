@@ -3,17 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { BaseProduct } from '@/data/inventory';
 
 interface IProduct extends BaseProduct, Document {
-  id: string;
   uuid: string;
 }
 
 const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-    default: () => new mongoose.Types.ObjectId().toString(),
-  },
   uuid: {
     type: String,
     required: true,

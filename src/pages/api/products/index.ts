@@ -27,16 +27,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       try {
         const product: BaseProduct = req.body;
         const newProduct = await Product.create({
-          id: new mongoose.Types.ObjectId().toString(),
           name: product.name,
           subtitle: product.subtitle,
           description: product.description,
           long_description: product.long_description,
           price: product.price,
           category: product.category,
-          type: product.type,
           amount_in_stock: product.amount_in_stock,
           is_in_stock: product.is_in_stock,
+          ...(product.type ? { type: product.type } : {}),
         });
 
         console.log(newProduct)

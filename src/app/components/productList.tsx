@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { BaseProduct, categoryEnum, DataBaseProduct } from "@/data/inventory";
-import { ProductForm, Accordion } from "../components";
+import { Dispatch, SetStateAction } from "react";
+import { BaseProduct, DataBaseProduct } from "@/data/inventory";
+import { ProductForm } from "../components";
 import { useMemo } from 'react';
 
 interface ProductListProps {
@@ -21,7 +21,6 @@ export default function ProductList({ products, setProducts }: ProductListProps)
     }, {});
   }, [products]);
 
-  let currentCategory = '';
     const handleInputChange = (index: number, field: string, value: any) => {
         const newProducts = [...products];
         newProducts[index] = { ...newProducts[index], [field]: value };
@@ -66,32 +65,36 @@ export default function ProductList({ products, setProducts }: ProductListProps)
       };
 
     
-      const handleDeleteProduct = async (index: number) => {
-        const product = products[index];
-        if (product._id) {
-          await fetch(`/api/products/${product._id}`, {
+      const handleDeleteProduct = async (id: string | undefined) => {
+        if (!id) return
+        const product = products.find(item => item._id === id)
+        const _id = product!._id
+        console.log(product);
+        if (id) {
+          await fetch(`/api/products/${product!._id}`, {
             method: "DELETE",
           });
-          const newProducts = products.filter((_, i) => i !== index);
+          const newProducts = products.filter((product, i) => product._id !== id);
+          console.log('settings new product', newProducts);
           setProducts(newProducts);
         }
       };
     
   
     return (
-    <div className="py-16">
+    <div className="pb-16">
       {Object.entries(groupedProducts).map(([category, products] : [any, any]) => (
         <div key={category} title={category} className="py-6">
           <span className="text-lg font-semibold text-zinc-600 rounded-md block p-[12px]">
             category: {category}
           </span>
-          {products.map((product: BaseProduct, index: number) => (
+          {products.map((product: DataBaseProduct, index: number) => (
             <ProductForm
               key={index}
               product={product}
               onInputChange={(field, value) => handleInputChange(index, field, value)}
               onSave={(data) => handleSaveProduct(index, data)}
-              onDelete={() => handleDeleteProduct(index)}
+              onDelete={() => handleDeleteProduct(product._id)}
             />
           ))}
         </div>

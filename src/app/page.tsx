@@ -110,7 +110,7 @@ export default function Home() {
             />
         </div>
         <div className='middle-seperator grow-down'></div>
-        <div className="right-column column">
+        <div className="right-column flex flex-col h-full">
             {/* Render Premium Products */}
             <Area
               title='premium'
@@ -135,25 +135,27 @@ export default function Home() {
               setProduct={setProduct} 
               setShowModal={setShowModal}
             />  
-            { settings.isPhoneNumberVisisble && (
-              <PhoneLink/>
-            )}
-            { settings.isTelegramLinkVisible && (
-              <TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} />
-            )}
-         
-
-            <div className="delivery-info-container info-container column">
-              <p>Delivery minimums are:</p>
-              {settings.minimums && settings.minimums.length > 0 ? (
-                settings.minimums.map((minimum: any) => (
-                  <span key={minimum.name}>
-                    {minimum.name}: ${minimum.value}
-                  </span>
-                ))
-              ) : (
-                <span>Loading delivery minimums...</span>
+            <div className="mt-auto">
+              { settings.isPhoneNumberVisisble && (
+                <div className="flex-1"><PhoneLink/></div>
               )}
+              { settings.isTelegramLinkVisible && (
+                <div className="flex-1"><TelegramLink url={"https://t.me/+5pVSJoetozdiZDNh"} /></div>
+              )}
+          
+
+              <div className="delivery-info-container info-container column ">
+                <p>Delivery minimums are:</p>
+                {settings.minimums && settings.minimums.length > 0 ? (
+                  settings.minimums.map((minimum: any) => (
+                    <span key={minimum.name}>
+                      {minimum.name}: ${minimum.value}
+                    </span>
+                  ))
+                ) : (
+                  <span>Loading delivery minimums...</span>
+                )}
+              </div>
             </div>
           </div>
         </div>

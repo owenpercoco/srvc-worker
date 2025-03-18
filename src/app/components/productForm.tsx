@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { BaseProduct, categoryEnum, Price } from '@/data/inventory';
 import { TextField, Select, MenuItem, Button, SelectChangeEvent } from '@mui/material';
+import { Delete } from "@mui/icons-material";
 import Accordion from './accordion';
 import { StockToggle } from './stockForm';
 import ImageUploader from './imageUploader';
@@ -130,39 +131,6 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           />
         </div>
         <div className="field-container">
-        <label>Indica/Sativa/Hybrid</label>
-          <Select
-            {...register('type')}
-            value={watch('type')}
-            size="small"
-            fullWidth
-            onChange={(e: SelectChangeEvent<string>) => {
-              setValue('type', e.target.value);
-              onInputChange('type', e.target.value);
-            }}
-          >
-            <MenuItem value="indica">Indica</MenuItem>
-            <MenuItem value="sativa">Sativa</MenuItem>
-            <MenuItem value="hybrid">Hybrid</MenuItem>
-            <MenuItem value="indicadominant">Ind Dom</MenuItem>
-            <MenuItem value="sativadominant">Sat Dom</MenuItem>
-          </Select>
-        </div>
-        <div className="field-container">
-          <label>Image</label>
-          <ImageUploader
-            imageUrl={watch('image')}
-            onImageUpload={(url) => {
-              setValue('image', url);
-              onInputChange('image', url);
-            }}
-            onImageDelete={() => {
-              setValue('image', '');
-              onInputChange('image', '');
-            }}
-          />
-        </div>
-        <div className="field-container">
           <label>Category</label>
           <Select
             {...register('category')}
@@ -180,24 +148,49 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
           </Select>
         </div>
         {watch('category') && (
+        <div className="field-container">
+        <label>Indica/Sativa/Hybrid</label>
+          <Select
+            {...register('type')}
+            value={watch('type')}
+
+            size="small"
+            fullWidth
+            onChange={(e: SelectChangeEvent<string>) => {
+              setValue('type', e.target.value);
+              onInputChange('type', e.target.value);
+            }}
+          >
+            <MenuItem value="indica">Indica</MenuItem>
+            <MenuItem value="sativa">Sativa</MenuItem>
+            <MenuItem value="hybrid">Hybrid</MenuItem>
+            <MenuItem value="indicadominant">Ind Dom</MenuItem>
+            <MenuItem value="sativadominant">Sat Dom</MenuItem>
+          </Select>
+        </div>
+        )}
+        {watch('category') && (
           <>
             <label>Prices</label>
             {fields.map((field, index) => (
               <div key={`${product.name}-${field.quantity}`}  className="field-container">
-                <div className="row">
+                <div className="flex flex-col gap-4">
                   <TextField
+                    className="mt-2"
                     label="Quantity"
                     {...register(`price.${index}.quantity`)}
                     placeholder="Quantity"
                     fullWidth
                     size="small"
                     onChange={(e) => {
-                      const value = parseFloat(e.target.value);
-                      setValue(`price.${index}.quantity`, value);
-                      onInputChange(`price.${index}.quantity`, value);
+                      const value = e.target.value;
+                      const parsedValue = value === "" || isNaN(parseFloat(value)) ? 0.0 : parseFloat(value);
+                      setValue(`price.${index}.quantity`, parsedValue);
+                      onInputChange(`price.${index}.quantity`, parsedValue);
                     }}
                   />
                   <TextField
+                    className="mt-2"
                     label="Price ($)"
                     {...register(`price.${index}.amount`)}
                     placeholder="Price"
@@ -212,6 +205,7 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
                     }}
                   />
                   <TextField
+                    className="pt-2"
                     label="Description"
                     {...register(`price.${index}.description`)}
                     placeholder="Description"
@@ -222,11 +216,11 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
                       onInputChange(`price.${index}.description`, e.target.value);
                     }}
                   />
-                  <Button onClick={() => remove(index)}>-</Button>
+                  <Button variant="outlined" size="small" color="error" startIcon={<Delete/>} onClick={() => remove(index)}> remove price</Button>
                 </div>
               </div>
             ))}
-            <Button onClick={() => append({ amount: 0, quantity: 0, description: '' })}>
+            <Button variant="outlined" onClick={() => append({ amount: 0, quantity: 0, description: '' })}>
               Add Price
             </Button>
           </>
@@ -254,6 +248,20 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
               />
             <Button type="button" disabled={!watch('is_in_stock')} onClick={() => handleQuantityChange(1)}>+</Button>
           </div>
+        </div>
+        <div className="field-container">
+          <label>Image</label>
+          <ImageUploader
+            imageUrl={watch('image')}
+            onImageUpload={(url) => {
+              setValue('image', url);
+              onInputChange('image', url);
+            }}
+            onImageDelete={() => {
+              setValue('image', '');
+              onInputChange('image', '');
+            }}
+          />
         </div>
         <div className="save-container">
           <Button type="submit">Save</Button>
