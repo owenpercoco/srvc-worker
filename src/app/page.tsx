@@ -57,10 +57,8 @@ export default function Home() {
       const response = await fetch('/api/inventory');
       const settings = await fetch('api/settings');
       const settingsResult = await settings.json()
-      console.log(settingsResult)
       setSettings(settingsResult.data);
       const result = await response.json()
-      console.log(result)
       setData(result.data);
       console.log("data retrieved and set");
     };

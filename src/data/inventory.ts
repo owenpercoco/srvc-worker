@@ -23,7 +23,9 @@ export interface BaseProduct {
   type?: TypeEnum;
   price: Price | Price[];
   amount?: string; // deprecated field
-  quantity: number;
+  amount_in_stock?: number; // replaces quantity
+  quantity: number; // deprecated field replaced by amount_in_stock
+  is_in_stock?: boolean;
   category: categoryEnum;
   image?: string;
 }

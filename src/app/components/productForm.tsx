@@ -3,6 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { BaseProduct, categoryEnum, Price } from '@/data/inventory';
 import { TextField, Select, MenuItem, Button, SelectChangeEvent } from '@mui/material';
 import Accordion from './accordion';
+import { StockToggle } from './stockForm';
 import ImageUploader from './imageUploader';
 
 interface ProductFormProps {
@@ -14,8 +15,8 @@ interface ProductFormProps {
 }
 
 function ProductForm({ product, onInputChange, onSave, onDelete, expanded = false }: ProductFormProps) {
-  const premiumDescriptions: [number, string][] = [[0.125, '⅛'], [0.25, '¼'], [0.5, '½'], [1, 'oz']];
-  const sungrownDescriptions: [number, string][] = [[0.25, '¼'], [1, 'oz']];
+  const premiumDescriptions: [number, number, string][] = [[0.125, 50, '⅛'], [0.25, 85, '¼'], [0.5, 160, '½'], [1, 300, 'oz']];
+  const sungrownDescriptions: [number, number, string][] = [[0.25, 60, '¼'], [1, 200, 'oz']];
 
   const { handleSubmit, watch, setValue, control, register } = useForm({
     defaultValues: {
@@ -26,8 +27,9 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
       price: product.price || [],
       category: product.category || '',
       type: product.type || '',
-      quantity: product.quantity,
+      amount_in_stock: product.amount_in_stock,
       image: product.image,
+      is_in_stock: product.is_in_stock ?? true,
     },
   });
 
@@ -39,9 +41,10 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
   const [isSaved, setIsSaved] = useState<null | boolean>(null);
 
   const handleQuantityChange = (increment: number) => {
-    const newQuantity = Number(watch('quantity') || 1) + increment;
-    setValue('quantity', newQuantity);
-    onInputChange('quantity', newQuantity);
+    if (!watch('is_in_stock')) return
+    const newAmount = Number(watch('amount_in_stock') || 1) + increment;
+    setValue('amount_in_stock', newAmount);
+    onInputChange('amount_in_stock', newAmount);
   };
 
   const handleCategoryChange = (value?: categoryEnum) => {
@@ -50,9 +53,9 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
     onInputChange('category', value || '');
 
     if (value === 'sungrown') {
-      setValue('price', sungrownDescriptions.map(([quantity, description]) => ({ amount: 0, quantity, description })));
+      setValue('price', sungrownDescriptions.map(([quantity, amount, description]) => ({ amount, quantity, description })));
     } else if (value === 'premium') {
-      setValue('price', premiumDescriptions.map(([quantity, description]) => ({ amount: 0, quantity, description })));
+      setValue('price', premiumDescriptions.map(([quantity,  amount, description]) => ({ amount, quantity, description })));
     } else {
       setValue('price', []);
     }
@@ -228,16 +231,28 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
             </Button>
           </>
         )}
-        <div className="field-container">
-          <div className="quantity-control">
-            <Button type="button" onClick={() => handleQuantityChange(-1)}>-</Button>
+        <div className="field-container text-center">
+          <span>{!watch('is_in_stock') ? 'Not ' : ''}In Stock</span>
+          <div className="quantity-control justify-center">
+            <StockToggle
+              isInStock={watch('is_in_stock')}
+              onChange={(value: boolean) => {
+                setValue(`is_in_stock`, value);
+                onInputChange(`is_in_stock`, value);
+              }}
+            />
+        </div>
+        </div>
+        <div className="field-container text-center">
+          <div className="quantity-control justify-center">
+            <Button type="button" disabled={!watch('is_in_stock')} onClick={() => handleQuantityChange(-1)}>-</Button>
             <TextField 
+              disabled={!watch('is_in_stock')}
               label="quantity in stock"
-              {...register('quantity')}
-              fullWidth
-              size="small"
+              {...register('amount_in_stock')}
+              value={watch('amount_in_stock')}
               />
-            <Button type="button" onClick={() => handleQuantityChange(1)}>+</Button>
+            <Button type="button" disabled={!watch('is_in_stock')} onClick={() => handleQuantityChange(1)}>+</Button>
           </div>
         </div>
         <div className="save-container">

@@ -12,7 +12,7 @@ interface ProductListProps {
 
 export default function ProductList({ products, setProducts }: ProductListProps) {
   const groupedProducts = useMemo(() => {
-    return products.reduce((acc: any, product: any) => {
+    return products.reduce((acc: any, product: DataBaseProduct) => {
       if (!acc[product.category]) {
         acc[product.category] = [];
       }
@@ -20,10 +20,6 @@ export default function ProductList({ products, setProducts }: ProductListProps)
       return acc;
     }, {});
   }, [products]);
-
-  useEffect(() => {
-    console.log("Grouped Products:", groupedProducts);
-  }, [groupedProducts]);
 
   let currentCategory = '';
     const handleInputChange = (index: number, field: string, value: any) => {
@@ -39,7 +35,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
           ...product,
           ...data
         })
-  
+
         try {
           if (product._id) {
             await fetch(`/api/products/${product._id}`, {
@@ -83,12 +79,11 @@ export default function ProductList({ products, setProducts }: ProductListProps)
     
   
     return (
-    <div className="inventory-container">
-      <h2>Inventory</h2>
+    <div className="py-16">
       {Object.entries(groupedProducts).map(([category, products] : [any, any]) => (
-        <div key={category} title={category}>
-          <span className="text-lg font-semibold text-zinc-600 rounded-md">
-            {category}
+        <div key={category} title={category} className="py-6">
+          <span className="text-lg font-semibold text-zinc-600 rounded-md block p-[12px]">
+            category: {category}
           </span>
           {products.map((product: BaseProduct, index: number) => (
             <ProductForm

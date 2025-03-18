@@ -70,7 +70,6 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
             name: selectedProduct.name,
       })),
     };
-    console.log(formattedData)
     const success = await onSave(formattedData);
     if (success) {
       setValue('telephone', '');
@@ -126,7 +125,6 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
                   const newValue = [
                     ...value.map((item: any) => ({ ...item, id: uuidv4() })),
                   ];
-                  console.log(newValue)
                   field.onChange(newValue);
               }}
               renderTags={(value, getTagProps) =>

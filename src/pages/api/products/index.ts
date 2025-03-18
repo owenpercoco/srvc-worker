@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import mongoose from 'mongoose'
 import connect from '../../../utils/db';
 import Product from '../../../models/Product';
 import { BaseProduct } from '../../../data/inventory';
@@ -25,10 +26,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     case 'POST':
       try {
         const product: BaseProduct = req.body;
-        const newProduct = await Product.create(product);
+        const newProduct = await Product.create({
+          id: new mongoose.Types.ObjectId().toString(),
+          name: product.name,
+          subtitle: product.subtitle,
+          description: product.description,
+          long_description: product.long_description,
+          price: product.price,
+          category: product.category,
+          type: product.type,
+          amount_in_stock: product.amount_in_stock,
+          is_in_stock: product.is_in_stock,
+        });
+
+        console.log(newProduct)
+        await newProduct.save();
         res.status(201).json({ success: true, data: newProduct });
-      } catch (error) {
-        res.status(400).json({ success: false, error: 'Failed to create product' });
+      } catch (error: any) {
+        console.error("Mongoose Save Error:", error);
+        res.status(400).json({ success: false, error: error.message || "Failed to create product" });
       }
       break;
 

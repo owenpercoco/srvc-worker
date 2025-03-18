@@ -23,7 +23,7 @@ export default function Inventory() {
     subtitle: "",
     type: undefined,
     price: undefined,
-    quantity: 1,
+    amount_in_stock: 1,
     category: undefined,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -61,16 +61,17 @@ export default function Inventory() {
   };
 
   const handleSaveNewProduct = async (data: any) => {
-    console.log(data)
     try {
       const response = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newProduct),
+        body: JSON.stringify(data),
       });
+
       const newProductData = await response.json();
+      console.log(newProductData)
       setProducts([...products, newProductData.data]);
       setNewProduct({
         name: "",
@@ -79,7 +80,7 @@ export default function Inventory() {
         type: undefined,
         price: undefined,
         amount: "",
-        quantity: 1,
+        amount_in_stock: 1,
         category: categoryEnum.sungrown,
       });
       setIsModalOpen(false);
@@ -114,25 +115,34 @@ export default function Inventory() {
   );
 
   return (
-    <div className="inventory-wrapper">
-      <div className="settings-container">
-        <SettingsForm />
-      </div>
-      <div className="inventory-container">
-      <h2 className="text-3xl font-bold text-center bg-gray-100 p-4 rounded-lg">
-        Current Products
-      </h2>
-        <ProductList products={products} setProducts={setProducts} />
+      <div className="inventory-wrapper relative">
+        <h2 className="text-3xl font-bold text-center bg-gray-100 p-4 rounded-lg">
+          Current Products
+        </h2>
+        <div className="inventory-container">
+          <ProductList products={products} setProducts={setProducts} />
+        </div>
 
-        <button
-          className="add-product-button"
-          onClick={() => setIsModalOpen(true)}
-        >
-          +
-        </button>
+        {/* Fixed Bottom-Right Container */}
+        <div className="fixed bottom-4 right-4 gap-2">
+          {/* Settings Form */}
+          <div className="bg-white p-3 rounded-lg shadow-lg flex flex-row items-end">
+            <SettingsForm />
 
+
+          {/* Add Product Button */}
+          <button
+            className="add-product-button w-12 h-12 bg-blue-500 text-white text-2xl rounded-full shadow-lg flex items-center justify-center"
+            onClick={() => setIsModalOpen(true)}
+          >
+            +
+          </button>          
+          </div>
+        </div>
+
+        {/* Modal for Adding Product */}
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <h2>Add New Product</h2>
+          <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
           <ProductForm
             product={newProduct}
             onInputChange={handleNewProductChange}
@@ -141,6 +151,5 @@ export default function Inventory() {
           />
         </Modal>
       </div>
-    </div>
   );
 }

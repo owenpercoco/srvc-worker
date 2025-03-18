@@ -17,7 +17,6 @@ export default function PageSettingsForm() {
     async function fetchSettings() {
       const settings = await fetch('api/settings');
       const settingsResult = await settings.json()
-      console.log(settingsResult)
       setIsTelegramLinkVisible(settingsResult.data.isTelegramLinkVisible);
       setIsPhoneNumberVisisble(settingsResult.data.isPhoneNumberVisisble);
       setMinimums(settingsResult.data.minimums);
@@ -49,7 +48,6 @@ export default function PageSettingsForm() {
       isPhoneNumberVisisble,
       minimums,
     };
-    console.log(payload)
     try {
       const response = await fetch("/api/settings", {
         method: "POST",

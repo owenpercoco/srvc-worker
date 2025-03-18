@@ -35,19 +35,11 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
   },
   type: {
     type: String,
-    enum: ['indica', 'sativa', 'hybrid'],
+    enum: ['indica', 'sativa', 'hybrid', 'indicadominant', 'sativadominant'],
   },
   price: {
-    type: SchemaTypes.Mixed,
-    validate: {
-      validator: function(value: any) {
-        return (
-          typeof value === 'number' ||
-          (Array.isArray(value) && value.every((item) => typeof item === 'number'))
-        );
-      },
-      message: 'Price must be a number or an array of numbers',
-    },
+    type: [{ amount: Number, quantity: Number, description: String }],
+    default: [],
   },
   amount: {
     type: String,
@@ -55,6 +47,12 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
   category: {
     type: String,
     enum: ['sungrown', 'premium', 'edible', 'preroll', 'concentrate', 'psychadelic'],
+  },
+  is_in_stock: {
+    type: Boolean,
+  },
+  amount_in_stock: {
+    type: Number
   },
   quantity: {
     type: Number,
