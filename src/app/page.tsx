@@ -74,8 +74,8 @@ export default function Home() {
   }
 
   return (
-    <div className="wrapper">
-      <div className="container column">
+    <div className="wrapper w-[98%]">
+      <div className="container column pb-9">
         <div className='info-container'>
           <span className="info-text">hold any menu item for more information</span>
         </div>
