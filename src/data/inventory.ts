@@ -25,7 +25,7 @@ export interface BaseProduct {
   amount?: string; // deprecated field
   amount_in_stock?: number; // replaces quantity
   quantity: number; // deprecated field replaced by amount_in_stock
-  is_in_stock?: boolean;
+  is_in_stock: boolean;
   category: categoryEnum;
   image?: string;
 }
@@ -97,6 +97,7 @@ const sungrownProducts: SungrownProduct[] = [
     price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
+    is_in_stock: true,
   },
   {
     name: "Tyson",
@@ -105,6 +106,7 @@ const sungrownProducts: SungrownProduct[] = [
     price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
+    is_in_stock: true,
   },
   {
     name: "Purple Cream",
@@ -113,6 +115,7 @@ const sungrownProducts: SungrownProduct[] = [
     price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
+    is_in_stock: true,
   },
   {
     name: "Gary Payton",
@@ -121,6 +124,7 @@ const sungrownProducts: SungrownProduct[] = [
     price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
+    is_in_stock: true,
   },
   {
     name: "Bobcat",
@@ -129,6 +133,7 @@ const sungrownProducts: SungrownProduct[] = [
     price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
+    is_in_stock: true,
   },
   {
     name: "Lemon Cherry Gelato",
@@ -137,6 +142,7 @@ const sungrownProducts: SungrownProduct[] = [
     price: sungrownPrice,
     quantity: 1,
     category: categoryEnum.sungrown,
+    is_in_stock: true,
   },
 ];
 
@@ -149,6 +155,7 @@ const premiumProducts: PremiumProduct[] = [
     price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
   {
     name: "Guava Runts",
@@ -157,6 +164,7 @@ const premiumProducts: PremiumProduct[] = [
     price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
   {
     name: "Gelotti",
@@ -165,6 +173,7 @@ const premiumProducts: PremiumProduct[] = [
     price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
   {
     name: "WH Bubble Gum",
@@ -173,6 +182,7 @@ const premiumProducts: PremiumProduct[] = [
     price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
   {
     name: "Gelato 33",
@@ -182,6 +192,7 @@ const premiumProducts: PremiumProduct[] = [
     price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
   {
     name: "Wagyu",
@@ -191,6 +202,7 @@ const premiumProducts: PremiumProduct[] = [
     price: premiumPrice,
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
   {
     name: "Bazookalato",
@@ -203,6 +215,7 @@ const premiumProducts: PremiumProduct[] = [
     ],
     quantity: 1,
     category: categoryEnum.premium,
+    is_in_stock: true,
   },
 ];
 
@@ -214,6 +227,7 @@ const ediblesProducts: EdiblesProduct[] = [
     price: { amount: 25, description: "per pack", quantity: 1 },
     quantity: 1,
     category: categoryEnum.edible,
+    is_in_stock: true,
   },
   {
     name: "jelly wizards",
@@ -221,6 +235,7 @@ const ediblesProducts: EdiblesProduct[] = [
     price: { amount: 25, description: "per pack", quantity: 1 },
     quantity: 1,
     category: categoryEnum.edible,
+    is_in_stock: true,
   },
   {
     name: "lola gummies",
@@ -228,6 +243,7 @@ const ediblesProducts: EdiblesProduct[] = [
     price: { amount: 25, description: "per pack", quantity: 1 },
     quantity: 1,
     category: categoryEnum.edible,
+    is_in_stock: true,
   },
 ];
 
@@ -238,6 +254,7 @@ const psychedelicProducts: PsychedelicProduct[] = [
     price: { amount: 35, description: "3.5 grams", quantity: 1 },
     quantity: 1,
     category: categoryEnum.psychadelic,
+    is_in_stock: true,
   },
 ];
 
@@ -249,6 +266,7 @@ const preRollProducts: PrerollProduct[] = [
     type: TypeEnum.indica,
     quantity: 1,
     category: categoryEnum.preroll,
+    is_in_stock: true,
   },
 ];
 
@@ -259,24 +277,28 @@ const concentrateProducts: ConcentrateProduct[] = [
     price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
+    is_in_stock: true,
   },
   {
     name: "waka disposable/live resin",
     price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
+    is_in_stock: true,
   },
   {
     name: "batter",
     price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
+    is_in_stock: true,
   },
   {
     name: "sugar",
     price: concentratePrice,
     quantity: 1,
     category: categoryEnum.concentrate,
+    is_in_stock: true,
   },
 ];
 

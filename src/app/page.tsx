@@ -1,12 +1,12 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { returnData, BaseProduct, Price, mockData } from '@/data/inventory';
+import { BaseProduct, Price, DataBaseProduct } from '@/data/inventory';
 import { Typography } from '@mui/material';
 import { SrvcFooter, Logo, Modal, TelegramLink, Area, PhoneLink } from './components/';
 import Image from 'next/image';
 
 export default function Home() {
-  const [data, setData] = useState<returnData>()
+  const [data, setData] = useState<Record<string, DataBaseProduct[]>>()
   const [settings, setSettings] = useState<any>({});
   const [showModal, setShowModal] = useState<boolean>(false);
   const [product, setProduct] = useState<BaseProduct | undefined>()
@@ -51,15 +51,38 @@ export default function Home() {
     }
     return displayString;
   }
-
+  function sortCategories(products: DataBaseProduct[]) {
+    const sorted_products: Record<string, DataBaseProduct[]> = {
+      psychadelic: [],
+      edible: [],
+      premium: [],
+      sungrown: [],
+      concentrate: [],
+      preroll: [],
+    };
+  
+    for (let i = 0; i < products.length; i++) {
+      const category = products[i].category;
+  
+      if (!sorted_products[category]) {
+        sorted_products[category] = []; // Ensure the category exists
+      }
+  
+      sorted_products[category].push(products[i]);
+    }
+    console.log(sorted_products);
+    return sorted_products; // Return the sorted object
+  }
+  
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/inventory');
+      const response = await fetch("/api/products?inStockOnly=true");;
       const settings = await fetch('api/settings');
       const settingsResult = await settings.json()
       setSettings(settingsResult.data);
       const result = await response.json()
-      setData(result.data);
+      console.log(result);
+      setData(sortCategories(result.data));
       console.log("data retrieved and set");
     };
 
@@ -96,7 +119,7 @@ export default function Home() {
             <Area
               title='edibles'
               premium
-              product={data.edibles}
+              product={data.edible}
               setProduct={setProduct} 
               setShowModal={setShowModal}
             />
@@ -104,13 +127,13 @@ export default function Home() {
             {/* Render Psychedelic Products */}
             <Area
               title='psychedelics'
-              product={data.psychedelics}
+              product={data.psychadelic}
               setProduct={setProduct} 
               setShowModal={setShowModal}
             />
         </div>
         <div className='middle-seperator grow-down'></div>
-        <div className="right-column flex flex-col h-full">
+        <div className="right-column flex flex-col h-full">  
             {/* Render Premium Products */}
             <Area
               title='premium'
@@ -123,7 +146,7 @@ export default function Home() {
             {/* Render Preroll Products */}
             <Area
               title='preroll'
-              product={data.prerolls}
+              product={data.preroll}
               setProduct={setProduct} 
               setShowModal={setShowModal}/>
 
@@ -131,7 +154,7 @@ export default function Home() {
             <Area 
               title='concentrates'
               premium
-              product={data.concentrates}
+              product={data.concentrate}
               setProduct={setProduct} 
               setShowModal={setShowModal}
             />  

@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import mongoose from 'mongoose'
 import connect from '../../../utils/db';
 import Product from '../../../models/Product';
 import { BaseProduct } from '../../../data/inventory';
@@ -16,6 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   switch (req.method) {
     case 'GET':
       try {
+        const { inStockOnly } = req.query; 
+        const filter = inStockOnly === "true" ? { is_in_stock: true } : {}; 
+        console.log("fetching products with filter: ", filter);
         const products = await Product.find({});
         res.status(200).json({ success: true, data: products });
       } catch (error) {

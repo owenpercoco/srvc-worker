@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { BaseProduct, categoryEnum, Price } from '@/data/inventory';
 import { TextField, Select, MenuItem, Button, SelectChangeEvent } from '@mui/material';
-import { Delete } from "@mui/icons-material";
-import Accordion from './accordion';
+import { Delete, Edit } from "@mui/icons-material";
+import Modal from './modal';
 import { StockToggle } from './stockForm';
 import ImageUploader from './imageUploader';
 
@@ -15,9 +15,10 @@ interface ProductFormProps {
   expanded?: boolean;
 }
 
-function ProductForm({ product, onInputChange, onSave, onDelete, expanded = false }: ProductFormProps) {
+function ProductForm({ product, onInputChange, onSave, expanded = false }: ProductFormProps) {
   const premiumDescriptions: [number, number, string][] = [[0.125, 50, '⅛'], [0.25, 85, '¼'], [0.5, 160, '½'], [1, 300, 'oz']];
   const sungrownDescriptions: [number, number, string][] = [[0.25, 60, '¼'], [1, 200, 'oz']];
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(expanded);
 
   const { handleSubmit, watch, setValue, control, register } = useForm({
     defaultValues: {
@@ -69,10 +70,29 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
     const success = await onSave({ ...data, image: imageUrl, category, long_description });
     setIsSaved(success);
     setTimeout(() => setIsSaved(null), 2000);
+    setIsModalOpen(false);
   };
 
   return (
-    <Accordion title={watch('name') || 'Product Form'} expanded={expanded} contained={true}>
+    <>
+      {/* Product Info Bar */}
+        <div className="flex items-center justify-between w-full p-3 border-b border-gray-300 bg-gray-100">
+        {/* Stock Status Indicator */}
+        <div className={`w-3 h-3 rounded-full ${product.is_in_stock ? "bg-green-500" : "bg-red-500"}`} />
+
+        {/* Product Name */}
+        <span className="text-lg font-medium">{product.name}</span>
+
+        {/* Amount in Stock */}
+        <span className="text-gray-600">{product.amount_in_stock} in stock</span>
+
+        {/* Edit Button */}
+        <button onClick={() => setIsModalOpen(true)} className="text-gray-600 hover:text-gray-800">
+          <Edit />
+        </button>
+      </div>
+
+    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="field-container">
           <TextField
@@ -277,10 +297,10 @@ function ProductForm({ product, onInputChange, onSave, onDelete, expanded = fals
               }}
             ></span>
           )}
-          <Button type="button" onClick={onDelete}>Delete</Button>
         </div>
       </form>
-    </Accordion>
+    </Modal>
+    </>
   );
 }
 

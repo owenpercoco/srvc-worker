@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import connect from '../../../utils/db';
 import Product from '../../../models/Product';
@@ -52,15 +53,17 @@ const handlePutRequest = async (id: string | string[], req: NextApiRequest, res:
     if (category !== undefined && category !== "") updateData.category = category;
     if (image !== undefined && image !== "") updateData.image = image;
 
-    console.log("update data", updateData);
+    console.log("we are updating data to this ID:",id,  updateData);
 
-    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
+    const updatedProduct = await Product.findById(id);
 
     if (!updatedProduct) {
       return res.status(404).json({ success: false, error: "Product not found" });
     }
+    
+    const result = await Product.findByIdAndUpdate(id, updateData, { new: true });
 
-    res.status(200).json({ success: true, data: updatedProduct });
+    res.status(200).json({ success: true, data: result });
   } catch (error) {
     res.status(400).json({ success: false, error: "Failed to update product" });
   }
