@@ -30,8 +30,6 @@ export default function ProductList({ products, setProducts }: ProductListProps)
     
       const handleSaveProduct = async (product: DataBaseProduct, data?: Partial<DataBaseProduct>) => {
         try {
-          if (product._id) {
-            // Update existing product
             const response = await fetch(`/api/products/${product._id}`, {
               method: "PUT",
               headers: {
@@ -41,7 +39,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
             });
       
             if (!response.ok) {
-              throw new Error("Failed to update product");
+               console.error("Failed to update product");
             }
       
             const updatedProduct = await response.json();
@@ -50,25 +48,6 @@ export default function ProductList({ products, setProducts }: ProductListProps)
             setProducts((prevProducts) =>
               prevProducts.map((p) => (p._id === updatedProduct._id ? updatedProduct : p))
             );
-          } else {
-            // Add new product
-            const response = await fetch("/api/products", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(product),
-            });
-      
-            if (!response.ok) {
-              throw new Error("Failed to create product");
-            }
-      
-            const newProduct = await response.json();
-      
-            // Append new product to the end of the list
-            setProducts((prevProducts) => [...prevProducts, newProduct]);
-          }
           return true; // Indicate success
         } catch (error) {
           console.error("Failed to save product:", error);
