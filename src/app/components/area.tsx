@@ -44,8 +44,8 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
     }
   if (product === undefined || product.length == 0) {
     return (
-      <div className="area-container flex flex-col pb-1">
-        <div className={`uppercase flex justify-between text-[8px] px-2 mb-1 area-header ${premium ? 'bg-black text-white' : 'text-black'}`}>
+      <div className="area-container flex flex-col pb-1 flex-1 my-auto">
+        <div className={`uppercase flex justify-between text-[8px] px-1 mb-1 area-header ${premium ? 'bg-black text-white' : 'text-black'}`}>
           {headerFromTitle(title)}
         </div>
         <div className="p-4 rounded-lg text-center">
@@ -55,8 +55,8 @@ function Area({title, premium = false, product, setProduct, setShowModal }: Prop
     );
   }
   return (
-    <div className="area-container flex flex-col pb-1">
-      <div className={`uppercase flex justify-between text-[8px] px-2 mb-1 area-header ${premium ? 'bg-black text-white' : 'text-black'}`}>
+    <div className="area-container flex flex-col pb-1 flex-1 my-auto">
+      <div className={`uppercase flex justify-between text-[8px] px-1 mb-1 area-header ${premium ? 'bg-black text-white' : 'text-black'}`}>
         {headerFromTitle(title)}
       </div>
       <div className="product-list">

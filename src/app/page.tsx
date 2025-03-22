@@ -70,7 +70,6 @@ export default function Home() {
   
       sorted_products[category].push(products[i]);
     }
-    console.log(sorted_products);
     return sorted_products; // Return the sorted object
   }
   
@@ -81,7 +80,6 @@ export default function Home() {
       const settingsResult = await settings.json()
       setSettings(settingsResult.data);
       const result = await response.json()
-      console.log(result);
       setData(sortCategories(result.data));
       console.log("data retrieved and set");
     };
@@ -97,14 +95,14 @@ export default function Home() {
   }
 
   return (
-    <div className="wrapper w-[98%]">
-      <div className="container column pb-9">
+    <div className="flex justify-center h-[95%] w-[98%] m-auto">
+      <div className="container column h-[100%]">
         <div className='info-container'>
           <span className="info-text">hold any menu item for more information</span>
         </div>
         
-      <div className="column-container row">
-        <div className="left-column column">
+      <div className="column-container row h-[100%]">
+        <div className="left-column column justify-around">
             <Logo />
             {/* Render Sungrown Products */}
             <hr className='expand'/>
@@ -133,7 +131,7 @@ export default function Home() {
             />
         </div>
         <div className='middle-seperator grow-down'></div>
-        <div className="right-column flex flex-col h-full">  
+        <div className="right-column flex flex-col h-full justify-around">  
             {/* Render Premium Products */}
             <Area
               title='premium'

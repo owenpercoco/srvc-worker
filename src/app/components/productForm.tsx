@@ -5,6 +5,7 @@ import { TextField, Select, MenuItem, Button, SelectChangeEvent } from '@mui/mat
 import { Delete, Edit } from "@mui/icons-material";
 import Modal from './modal';
 import { StockToggle } from './stockForm';
+import ProductFormWrapper from './productFormWrapper';
 import ImageUploader from './imageUploader';
 
 interface ProductFormProps {
@@ -74,25 +75,6 @@ function ProductForm({ product, onInputChange, onSave, expanded = false }: Produ
   };
 
   return (
-    <>
-      {/* Product Info Bar */}
-        <div className="flex items-center justify-between w-full p-3 border-b border-gray-300 bg-gray-100">
-        {/* Stock Status Indicator */}
-        <div className={`w-3 h-3 rounded-full ${product.is_in_stock ? "bg-green-500" : "bg-red-500"}`} />
-
-        {/* Product Name */}
-        <span className="text-lg font-medium">{product.name}</span>
-
-        {/* Amount in Stock */}
-        <span className="text-gray-600">{product.amount_in_stock} in stock</span>
-
-        {/* Edit Button */}
-        <button onClick={() => setIsModalOpen(true)} className="text-gray-600 hover:text-gray-800">
-          <Edit />
-        </button>
-      </div>
-
-    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="field-container">
           <TextField
@@ -299,8 +281,6 @@ function ProductForm({ product, onInputChange, onSave, expanded = false }: Produ
           )}
         </div>
       </form>
-    </Modal>
-    </>
   );
 }
 

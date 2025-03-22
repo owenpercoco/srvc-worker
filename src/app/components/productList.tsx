@@ -1,7 +1,7 @@
 "use client";
 import { Dispatch, SetStateAction } from "react";
-import { BaseProduct, DataBaseProduct } from "@/data/inventory";
-import { ProductForm } from "../components";
+import { DataBaseProduct } from "@/data/inventory";
+import { ProductForm, ProductFormWrapper } from "../components";
 import { useMemo } from 'react';
 
 interface ProductListProps {
@@ -28,23 +28,30 @@ export default function ProductList({ products, setProducts }: ProductListProps)
       };
     
     
-      const handleSaveProduct = async (index: number, data?: any) => {
-        const product = products[index];
-        console.log("attempting save of ", {
-          ...product,
-          ...data
-        })
-
+      const handleSaveProduct = async (product: DataBaseProduct, data?: Partial<DataBaseProduct>) => {
         try {
           if (product._id) {
-            await fetch(`/api/products/${product._id}`, {
+            // Update existing product
+            const response = await fetch(`/api/products/${product._id}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({...product, ...data}),
+              body: JSON.stringify({ ...product, ...data }),
             });
+      
+            if (!response.ok) {
+              throw new Error("Failed to update product");
+            }
+      
+            const updatedProduct = await response.json();
+      
+            // Update state without altering order
+            setProducts((prevProducts) =>
+              prevProducts.map((p) => (p._id === updatedProduct._id ? updatedProduct : p))
+            );
           } else {
+            // Add new product
             const response = await fetch("/api/products", {
               method: "POST",
               headers: {
@@ -52,10 +59,15 @@ export default function ProductList({ products, setProducts }: ProductListProps)
               },
               body: JSON.stringify(product),
             });
+      
+            if (!response.ok) {
+              throw new Error("Failed to create product");
+            }
+      
             const newProduct = await response.json();
-            const newProducts = [...products];
-            newProducts[index] = newProduct.data;
-            setProducts(newProducts);
+      
+            // Append new product to the end of the list
+            setProducts((prevProducts) => [...prevProducts, newProduct]);
           }
           return true; // Indicate success
         } catch (error) {
@@ -63,22 +75,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
           return false; // Indicate failure
         }
       };
-
-    
-      const handleDeleteProduct = async (id: string | undefined) => {
-        if (!id) return
-        const product = products.find(item => item._id === id)
-        const _id = product!._id
-        console.log(product);
-        if (id) {
-          await fetch(`/api/products/${product!._id}`, {
-            method: "DELETE",
-          });
-          const newProducts = products.filter((product, i) => product._id !== id);
-          console.log('settings new product', newProducts);
-          setProducts(newProducts);
-        }
-      };
+      
     
   
     return (
@@ -89,13 +86,14 @@ export default function ProductList({ products, setProducts }: ProductListProps)
             category: {category}
           </span>
           {products.map((product: DataBaseProduct, index: number) => (
-            <ProductForm
-              key={index}
-              product={product}
-              onInputChange={(field, value) => handleInputChange(index, field, value)}
-              onSave={(data) => handleSaveProduct(index, data)}
-              onDelete={() => handleDeleteProduct(product._id)}
-            />
+            <ProductFormWrapper product={product}>
+              <ProductForm
+                key={index}
+                product={product}
+                onInputChange={(field, value) => handleInputChange(index, field, value)}
+                onSave={(data) => handleSaveProduct(product, data)}
+              />
+            </ProductFormWrapper>
           ))}
         </div>
       ))}
