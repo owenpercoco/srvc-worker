@@ -86,7 +86,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
             category: {category}
           </span>
           {products.map((product: DataBaseProduct, index: number) => (
-            <ProductFormWrapper product={product}>
+            <ProductFormWrapper product={product} key={index}>
               <ProductForm
                 key={index}
                 product={product}
