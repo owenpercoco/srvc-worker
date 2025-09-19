@@ -36,7 +36,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Invalid telephone number' });
       }
 
-      const total = orders.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+      const total = orders.reduce((acc: number, curr: any) => {
+        const parsed = parseFloat(String(curr.amount).replace(/[^0-9.]/g, '')) || 0;
+        return acc + parsed;
+      }, 0);
       console.log('Calculated total:', total);
 
       const newSale = new Sale({

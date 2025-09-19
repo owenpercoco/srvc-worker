@@ -30,31 +30,26 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
   const productOptions = products.flatMap((product: DataBaseProduct) => {
     if (Array.isArray(product.price)) {
       return product.price.map((price, index) => {
-        let quantity: string = String(price.quantity);
-        if (product.category === 'sungrown' || product.category === 'premium') {
-          quantity = amountMap.get(quantity)!;
-        }
+        const desc = String(price.description || '');
         return {
           id: uuidv4(), // Unique identifier for each product option
-          label: `${product.name} - ${quantity} - ${price.amount}$`,
+          label: `${product.name} - ${desc} - $${price.amount}`,
           value: product._id,
           price: price.amount,
-          quantity: quantity,
+          description: desc,
           name: product.name,
           category: product.category,
-          description: '',
         };
       });
     } else {
       return [{
         id: uuidv4(),
-        label: `${product.name} - ${product.amount || '1'} - ${product.price}$`,
+        label: `${product.name} - ${product.amount || '1'} - $${product.price}`,
         value: product._id,
         price: product.price.amount,
-        quantity: product.amount || '1',
+        description: product.price.description || '',
         name: product.name,
         category: product.category,
-        description: '',
       }];
     }
   });
@@ -64,11 +59,11 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
     const formattedData = {
       ...data,
       confirmed: false,
-      orders: data.orders.map((selectedProduct: any) => ({
-            amount: selectedProduct.price,
-            quantity: selectedProduct.quantity,
-            name: selectedProduct.name,
-      })),
+  orders: data.orders.map((selectedProduct: any) => ({
+    amount: selectedProduct.price,
+    description: selectedProduct.description,
+    name: selectedProduct.name,
+  })),
     };
     const success = await onSave(formattedData);
     if (success) {
@@ -130,7 +125,7 @@ const SalesForm = ({ products, telephoneOptions, onSave }: SalesFormProps) => {
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
                   <Chip
-                    label={`${option.name} - ${option.quantity} - $${option.price}`}
+                    label={`${option.name} - ${option.description} - $${option.price}`}
                     {...getTagProps({ index })}
                     key={option.id} 
                   />

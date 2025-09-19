@@ -71,6 +71,7 @@ export default function ProductList({ products, setProducts }: ProductListProps)
                 product={product}
                 onInputChange={(field, value) => handleInputChange(index, field, value)}
                 onSave={(data) => handleSaveProduct(product, data)}
+                onDelete={() => setProducts((prev) => prev.filter((p) => p._id !== product._id))}
               />
             </ProductFormWrapper>
           ))}

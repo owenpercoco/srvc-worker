@@ -24,7 +24,7 @@ const handlePutRequest = async (id: string | string[], req: NextApiRequest, res:
       is_in_stock,
       category,
       image,
-      amount_in_stock,
+      is_deleted,
     } = req.body;
 
     const updateData: any = {};
@@ -37,9 +37,9 @@ const handlePutRequest = async (id: string | string[], req: NextApiRequest, res:
     if (price !== undefined && price !== "") updateData.price = price;
     if (amount !== undefined && amount !== "") updateData.amount = amount;
     if (is_in_stock !== undefined) updateData.is_in_stock = is_in_stock; // Allow false
-    if (amount_in_stock !== undefined && amount_in_stock !== "") updateData.amount_in_stock = amount_in_stock;
     if (category !== undefined && category !== "") updateData.category = category;
     if (image !== undefined && image !== "") updateData.image = image;
+  if (is_deleted !== undefined) updateData.is_deleted = is_deleted;
 
 
     const updatedProduct = await Product.findById(id);

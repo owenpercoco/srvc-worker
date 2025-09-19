@@ -13,11 +13,14 @@ const SrvcFooter = ({ order }: { order: Price[] }) => {
   useEffect(() => {
     // Generate the SMS text from the order's prices
     let smsText = order
-      .map(price => `${price.name || ''} - ${price.description}: $${price.amount}`)
+      .map(price => `${price.description}: $${price.amount}`)
       .join('\n');
-    
-    // Add the total amount at the end of the message
-    const totalAmount = order.reduce((total, price) => total + price.amount, 0);
+
+    // Add the total amount at the end of the message — attempt to parse numeric amounts
+    const totalAmount = order.reduce((total, price) => {
+      const parsed = parseFloat(String(price.amount).replace(/[^0-9.]/g, '')) || 0;
+      return total + parsed;
+    }, 0);
     smsText += `\nTotal: $${totalAmount}`;
 
     // URL-encode the SMS text

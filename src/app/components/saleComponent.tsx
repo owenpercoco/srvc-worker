@@ -63,7 +63,7 @@ const SaleComponent = ({ sale, onSaleConfirmed }: SaleCardProps) => {
             {sale.orders!.map((order, index) => (
               <Grid xs={12} sm={6} key={index}>
                <Chip
-                    label={`${order.name} - ${order.quantity} - $${order.amount}`}
+           label={`${order.name} - ${order.description || ''} - $${order.amount}`}
                     
                   />
               </Grid>

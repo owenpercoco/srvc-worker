@@ -29,18 +29,14 @@ const OrderComponent: React.FC<OrderComponentProps> = ({ product, order, setOrde
   const handleAddToOrder = () => {
     if (Array.isArray(product.price) && selectedIndex !== -1) {
       const selectedPrice = product.price[selectedIndex];
-      setOrder((prevOrder) => ({
+      setOrder((prevOrder) => ([
         ...prevOrder,
-        orders: [
-          ...prevOrder,
-          {
-            amount: selectedPrice.amount,
-            quantity: selectedPrice.quantity,
-            description: selectedPrice.description,
-            name: product.name,
-          }
-        ]
-      }));
+        {
+          amount: selectedPrice.amount,
+          description: selectedPrice.description,
+          name: product.name,
+        }
+      ]));
     }
   };
 

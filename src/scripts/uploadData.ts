@@ -12,9 +12,7 @@ async function insertMockData() {
     const products = await Product.find({});
 
     for (const product of products) {
-      // Ensure amount_in_stock is set to the product's quantity
-      product.amount_in_stock = product.quantity;
-      await product.save();
+      // No-op: quantity/amount_in_stock removed from schema — skipping
     }
     console.log('products updated successfully successfully');
   } catch (error) {

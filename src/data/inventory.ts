@@ -23,9 +23,7 @@ export interface BaseProduct {
   type?: TypeEnum;
   price: Price | Price[];
   amount?: string; // deprecated field
-  amount_in_stock?: number; // replaces quantity
-  quantity: number; // deprecated field replaced by amount_in_stock
-  is_in_stock: boolean;
+  is_in_stock?: boolean;
   category: categoryEnum;
   image?: string;
 }
@@ -35,21 +33,9 @@ export interface DataBaseProduct extends BaseProduct {
   id: number;
 }
 
-export interface Sale {
-  telephone?: string;
-  address?: string;
-  orders: Price[];
-  total?: number;
-  amount_paid?: number;
-  description?: string;
-
-}
-
 export interface Price {
-  amount: number; // the number in dollars charged
-  quantity: number; // the amount of product it represents
-  description: string; // a visual representation
-  name?: string // the name of the product I guess
+  amount: string; // display amount, e.g. "$60" or "60"
+  description?: string; // optional visual representation (e.g. "quarter", "oz")
 }
 
 export interface FlowerProduct extends BaseProduct {
@@ -75,18 +61,18 @@ export interface returnData {
 }
 
 const sungrownPrice: Price[] = [
-  { amount: 60, description: 'quarter', quantity: .25 },
-  { amount: 200, description: 'oz', quantity: 1 }
+  { amount: '60', description: 'quarter' },
+  { amount: '200', description: 'oz' }
 ];
 
 const premiumPrice: Price[] = [
-  { amount: 45, description: 'eighth', quantity:.125 },
-  { amount: 85, description: 'quarter', quantity: .25 },
-  { amount: 160, description: 'half', quantity: .5 },
-  { amount: 320, description: 'oz', quantity: 1 }
+  { amount: '45', description: 'eighth' },
+  { amount: '85', description: 'quarter' },
+  { amount: '160', description: 'half' },
+  { amount: '320', description: 'oz' }
 ];
 
-const concentratePrice: Price = { amount: 50, description: '1 gram', quantity: 1 };
+const concentratePrice: Price = { amount: '50', description: '1 gram' };
 
 // Sungrown Products
 const sungrownProducts: SungrownProduct[] = [
@@ -94,8 +80,7 @@ const sungrownProducts: SungrownProduct[] = [
     name: "Sour Diesel",
     description: "Top effects: energetic and uplifted",
     type: TypeEnum.hybrid,
-    price: sungrownPrice,
-    quantity: 1,
+  price: sungrownPrice,
     category: categoryEnum.sungrown,
     is_in_stock: true,
   },
@@ -104,7 +89,6 @@ const sungrownProducts: SungrownProduct[] = [
     description: "Top effects: relaxed and hungry",
     type: TypeEnum.hybrid,
     price: sungrownPrice,
-    quantity: 1,
     category: categoryEnum.sungrown,
     is_in_stock: true,
   },
@@ -113,7 +97,6 @@ const sungrownProducts: SungrownProduct[] = [
     description: "Top effects: hungry and sleepy",
     type: TypeEnum.hybrid,
     price: sungrownPrice,
-    quantity: 1,
     category: categoryEnum.sungrown,
     is_in_stock: true,
   },
@@ -122,7 +105,6 @@ const sungrownProducts: SungrownProduct[] = [
     description: "Top effects: euphoric and giggly",
     type: TypeEnum.hybrid,
     price: sungrownPrice,
-    quantity: 1,
     category: categoryEnum.sungrown,
     is_in_stock: true,
   },
@@ -131,7 +113,6 @@ const sungrownProducts: SungrownProduct[] = [
     description: "Top effects: happy and creative",
     type: TypeEnum.hybrid,
     price: sungrownPrice,
-    quantity: 1,
     category: categoryEnum.sungrown,
     is_in_stock: true,
   },
@@ -140,7 +121,6 @@ const sungrownProducts: SungrownProduct[] = [
     description: "Top effects: relaxed and giggly",
     type: TypeEnum.hybrid,
     price: sungrownPrice,
-    quantity: 1,
     category: categoryEnum.sungrown,
     is_in_stock: true,
   },
@@ -153,7 +133,6 @@ const premiumProducts: PremiumProduct[] = [
     description: "Top effects: uplifted and creative",
     type: TypeEnum.sativa,
     price: premiumPrice,
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -162,7 +141,6 @@ const premiumProducts: PremiumProduct[] = [
     description: "Top effects: giggly and aroused",
     type: TypeEnum.hybrid,
     price: premiumPrice,
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -171,7 +149,6 @@ const premiumProducts: PremiumProduct[] = [
     description: "Top effects: talkative and focused",
     type: TypeEnum.hybrid,
     price: premiumPrice,
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -180,7 +157,6 @@ const premiumProducts: PremiumProduct[] = [
     description: "Top effects: happy and giggly",
     type: TypeEnum.hybrid,
     price: premiumPrice,
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -190,7 +166,6 @@ const premiumProducts: PremiumProduct[] = [
     description: "Top effects: aroused and uplifted",
     type: TypeEnum.hybrid,
     price: premiumPrice,
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -200,7 +175,6 @@ const premiumProducts: PremiumProduct[] = [
     description: "Top effects: relaxed and sleepy",
     type: TypeEnum.hybrid,
     price: premiumPrice,
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -209,11 +183,10 @@ const premiumProducts: PremiumProduct[] = [
     subtitle: "candy",
     type: TypeEnum.hybrid,
     price: [
-      { amount: 55, description: 'eighth', quantity:.125  },
-      { amount: 100, description: 'quarter', quantity:.25 },
-      { amount: 190, description: 'half', quantity:.5 }
+      { amount: '55', description: 'eighth' },
+      { amount: '100', description: 'quarter' },
+      { amount: '190', description: 'half' }
     ],
-    quantity: 1,
     category: categoryEnum.premium,
     is_in_stock: true,
   },
@@ -224,24 +197,21 @@ const ediblesProducts: EdiblesProduct[] = [
   {
     name: "ya hemi gummies",
     description: "flavor: sour watermelon",
-    price: { amount: 25, description: "per pack", quantity: 1 },
-    quantity: 1,
+    price: { amount: '25', description: "per pack" },
     category: categoryEnum.edible,
     is_in_stock: true,
   },
   {
     name: "jelly wizards",
     description: "flavor: assorted",
-    price: { amount: 25, description: "per pack", quantity: 1 },
-    quantity: 1,
+    price: { amount: '25', description: "per pack" },
     category: categoryEnum.edible,
     is_in_stock: true,
   },
   {
     name: "lola gummies",
     description: "flavor: assorted",
-    price: { amount: 25, description: "per pack", quantity: 1 },
-    quantity: 1,
+    price: { amount: '25', description: "per pack" },
     category: categoryEnum.edible,
     is_in_stock: true,
   },
@@ -251,8 +221,7 @@ const ediblesProducts: EdiblesProduct[] = [
 const psychedelicProducts: PsychedelicProduct[] = [
   {
     name: "raw mushrooms penis envy",
-    price: { amount: 35, description: "3.5 grams", quantity: 1 },
-    quantity: 1,
+    price: { amount: '35', description: "3.5 grams" },
     category: categoryEnum.psychadelic,
     is_in_stock: true,
   },
@@ -262,9 +231,8 @@ const psychedelicProducts: PsychedelicProduct[] = [
 const preRollProducts: PrerollProduct[] = [
   {
     name: "Premium Preroll",
-    price: { amount: 10, description: "1 gram", quantity: 1 },
+    price: { amount: '10', description: "1 gram" },
     type: TypeEnum.indica,
-    quantity: 1,
     category: categoryEnum.preroll,
     is_in_stock: true,
   },
@@ -275,28 +243,24 @@ const concentrateProducts: ConcentrateProduct[] = [
   {
     name: "friendly farms cured resin vape",
     price: concentratePrice,
-    quantity: 1,
     category: categoryEnum.concentrate,
     is_in_stock: true,
   },
   {
     name: "waka disposable/live resin",
     price: concentratePrice,
-    quantity: 1,
     category: categoryEnum.concentrate,
     is_in_stock: true,
   },
   {
     name: "batter",
     price: concentratePrice,
-    quantity: 1,
     category: categoryEnum.concentrate,
     is_in_stock: true,
   },
   {
     name: "sugar",
     price: concentratePrice,
-    quantity: 1,
     category: categoryEnum.concentrate,
     is_in_stock: true,
   },

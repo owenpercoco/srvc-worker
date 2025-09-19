@@ -17,13 +17,14 @@ export default function Inventory() {
   const [passKey, setPassKey] = useState('');
   const [passCheck, setPassCheck] = useState(false)
   const [products, setProducts] = useState<DataBaseProduct[]>([]);
+  const [deletedSuggestions, setDeletedSuggestions] = useState<DataBaseProduct[]>([]);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
   const [newProduct, setNewProduct] = useState<Partial<BaseProduct>>({
     name: "",
     description: "",
     subtitle: "",
     type: undefined,
     price: undefined,
-    amount_in_stock: 1,
     category: undefined,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -38,6 +39,16 @@ export default function Inventory() {
     }
 
     fetchProducts();
+    // also fetch deleted products for suggestions
+    (async function fetchDeleted(){
+      try {
+        const resp = await fetch('/api/products?deleted=true');
+        const data = await resp.json();
+        setDeletedSuggestions(data.data || []);
+      } catch (e) {
+        console.error('Failed to load deleted suggestions', e);
+      }
+    })();
   }, []);
 
   const handlePassKey = async () => {
@@ -62,17 +73,28 @@ export default function Inventory() {
 
   const handleSaveNewProduct = async (data: any) => {
     try {
-      const response = await fetch("/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      // If restoring an existing (deleted) product, call PUT to update and mark is_deleted false
+      if (restoringId) {
+        const resp = await fetch(`/api/products/${restoringId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...data, is_deleted: false }),
+        });
+        const updated = await resp.json();
+        setProducts([...products, updated.data]);
+      } else {
+        const response = await fetch("/api/products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
 
-      const newProductData = await response.json();
-      console.log(newProductData)
-      setProducts([...products, newProductData.data]);
+        const newProductData = await response.json();
+        console.log(newProductData)
+        setProducts([...products, newProductData.data]);
+      }
       setNewProduct({
         name: "",
         description: "",
@@ -80,9 +102,9 @@ export default function Inventory() {
         type: undefined,
         price: undefined,
         amount: "",
-        amount_in_stock: 1,
         category: categoryEnum.sungrown,
       });
+      setRestoringId(null);
       setIsModalOpen(false);
       return true;
     } catch (error) {
@@ -143,10 +165,27 @@ export default function Inventory() {
         {/* Modal for Adding Product */}
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
+          {/* Deleted-product restore dropdown removed; use Autocomplete in ProductForm instead */}
           <ProductForm
             product={newProduct}
             onInputChange={handleNewProductChange}
             onSave={(data: any) => handleSaveNewProduct(data)}
+            onRestoreSelect={(id: string | null, prod?: Partial<BaseProduct>) => {
+              setRestoringId(id ?? null);
+              if (prod) {
+                setNewProduct({
+                  name: prod.name || '',
+                  description: prod.description || '',
+                  subtitle: prod.subtitle || '',
+                  type: prod.type as any,
+                  price: prod.price as any,
+                  category: prod.category as any,
+                  amount: (prod as any).amount,
+                  is_in_stock: (prod as any).is_in_stock,
+                  image: (prod as any).image,
+                });
+              }
+            }}
             expanded
           />
         </Modal>

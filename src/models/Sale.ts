@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Define the interface for the Price schema
 interface IPrice {
-  amount: number;
-  quantity: number;
+  amount: string;
   description?: string;
   name?: string;
 }
@@ -24,12 +23,8 @@ export interface ISale extends Document {
 }
 
 // Define the Price schema
-const PriceSchema: Schema<IPrice> = new Schema<IPrice>({
+const PriceSchema = new Schema({
   amount: {
-    type: Number,
-    required: true,
-  },
-  quantity: {
     type: Number,
     required: true,
   },

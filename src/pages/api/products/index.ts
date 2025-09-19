@@ -15,10 +15,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   switch (req.method) {
     case 'GET':
       try {
-        const { inStockOnly } = req.query; 
-        const filter = inStockOnly === "true" ? { is_in_stock: true } : {}; 
-        console.log("fetching products with filter: ", filter);
-        const products = await Product.find({});
+  const { inStockOnly, deleted } = req.query; 
+  let baseFilter: any;
+  if (deleted === 'true') {
+    baseFilter = { is_deleted: true };
+  } else {
+    baseFilter = { is_deleted: { $ne: true } };
+  }
+  if (inStockOnly === "true") baseFilter.is_in_stock = true;
+  console.log("fetching products with filter: ", baseFilter);
+  const products = await Product.find(baseFilter);
         res.status(200).json({ success: true, data: products });
       } catch (error) {
         res.status(500).json({ success: false, error: 'Failed to load products' });
@@ -28,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     case 'POST':
       try {
         const product: BaseProduct = req.body;
+        // ignore any is_deleted sent in body
         const newProduct = await Product.create({
           name: product.name,
           subtitle: product.subtitle,
@@ -35,7 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           long_description: product.long_description,
           price: product.price,
           category: product.category,
-          amount_in_stock: product.amount_in_stock,
           is_in_stock: product.is_in_stock,
           ...(product.type ? { type: product.type } : {}),
         });

@@ -4,6 +4,7 @@ import { BaseProduct } from '@/data/inventory';
 
 interface IProduct extends BaseProduct, Document {
   uuid: string;
+  is_deleted?: boolean;
 }
 
 const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
@@ -12,6 +13,10 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
     required: true,
     unique: true,
     default: uuidv4,
+  },
+  is_deleted: {
+    type: Boolean,
+    default: false,
   },
   name: {
     type: String,
@@ -31,7 +36,7 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
     enum: ['indica', 'sativa', 'hybrid', 'indicadominant', 'sativadominant'],
   },
   price: {
-    type: [{ amount: Number, quantity: Number, description: String }],
+    type: [{ amount: String, description: { type: String } }],
     default: [],
   },
   amount: {
@@ -44,13 +49,7 @@ const ProductSchema: Schema<IProduct> = new Schema<IProduct>({
   is_in_stock: {
     type: Boolean,
   },
-  amount_in_stock: {
-    type: Number
-  },
-  quantity: {
-    type: Number,
-    default: () => 1,
-  },
+  // Removed amount_in_stock and quantity fields per refactor
   image: {
     type: String,
   }

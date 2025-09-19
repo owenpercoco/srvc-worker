@@ -25,9 +25,6 @@ function ProductFormWrapper({ product, expanded = false, children }: ProductForm
         {/* Product Name */}
         <span className="text-lg font-medium">{product.name}</span>
 
-        {/* Amount in Stock */}
-        <span className="text-gray-600">{product.amount_in_stock} in stock</span>
-
         {/* Edit Button */}
         <button onClick={() => setIsModalOpen(true)} className="text-gray-600 hover:text-gray-800">
           <Edit />

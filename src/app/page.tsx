@@ -10,28 +10,21 @@ export default function Home() {
   const [settings, setSettings] = useState<any>({});
   const [showModal, setShowModal] = useState<boolean>(false);
   const [product, setProduct] = useState<BaseProduct | undefined>()
-  const defaultPrices: Price[] = [
+  const defaultPrices: any[] = [
     {
-      amount: 45,
-      quantity: .125,
+      amount: '45',
       description: "⅛",
-      name: "Sour Diesel",
     },
     {
-      amount: 85,
-      quantity: .25,
+      amount: '85',
       description: "¼",
-      name: "Tyson",
     },
     {
-      amount: 160,
-      quantity: .5,
+      amount: '160',
       description: "½",
-      name: "Purple Cream",
     },
   ];
-
-  const [order, setOrder] = useState(defaultPrices);
+  const [order, setOrder] = useState<any[]>(defaultPrices);
 
   const frontEndTypeMap = {
     'sativa': 'SATIVA',
